@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:padding="15dp"
+        android:paddingTop="50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- Profile Icon -->
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="App Logo"
+                android:src="@drawable/ic_aegisaqua_logo" />
+
+            <!-- Toolbar Title -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:text="Profile"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Search Icon -->
+
+            <!-- Notification Icon -->
+            <ImageView
+                android:id="@+id/menu_icon2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_notifications" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- SwipeRefreshLayout wrapping the content below toolbar -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Profile Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#025E73"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Wrap profile image and pencil icon in a FrameLayout -->
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-12dp"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/background_circle"
+                            android:contentDescription="Profile Picture"
+                            android:padding="4dp"
+                            android:src="@drawable/img_profile" />
+
+                        <ImageView
+                            android:id="@+id/edit_profile_image"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/background_circle"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_edit_pencil"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <!-- Username text view
+                    <TextView
+                        android:id="@+id/username_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/> -->
+
+                    <!-- Profile username text view -->
+                    <TextView
+                        android:id="@+id/profile_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_image"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="#FFFFFF"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+
+                <!-- Statistics Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="-35dp"
+                    android:layout_marginEnd="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- Food Donated -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="140dp"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_rounded_corners"
+                        android:elevation="4dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/food_donated"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="Donated"
+                                android:textColor="#000000"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <!-- Icon -->
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:src="@drawable/ic_donate" />
+
+                                <!-- TextView -->
+                                <TextView
+                                    android:id="@+id/donated_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_bold"
+                                    android:text="0"
+                                    android:textColor="#025E73"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/food_requested"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="Requested"
+                                android:textColor="#000000"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <!-- Icon -->
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:src="@drawable/ic_receive" />
+
+                                <!-- TextView -->
+                                <TextView
+                                    android:id="@+id/requested_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_bold"
+                                    android:text="0"
+                                    android:textColor="#025E73"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Food Requested -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="140dp"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_rounded_corners"
+                        android:elevation="4dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <!-- Campaigns Section -->
+                        <LinearLayout
+                            android:id="@+id/campaign_volunteer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="Campaigns Joined"
+                                android:textColor="#000000"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:src="@drawable/ic_campaign" />
+
+                                <TextView
+                                    android:id="@+id/campaign_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_bold"
+                                    android:text="0"
+                                    android:textColor="#025E73"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Volunteer Section -->
+                        <LinearLayout
+                            android:id="@+id/volunteer_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="Volunteers Joined"
+                                android:textColor="#000000"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:src="@drawable/ic_volunteer" />
+
+                                <TextView
+                                    android:id="@+id/volunteer_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_bold"
+                                    android:text="0"
+                                    android:textColor="#025E73"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Button Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/personalInfoButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Personal Information"
+                        android:textColor="@color/black"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/ic_profile"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#000000"
+                        app:strokeColor="#000000"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/editProfileButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Edit Profile"
+                        android:textColor="@color/black"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/ic_edit_profile"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#000000"
+                        app:strokeColor="#000000"
+                        app:strokeWidth="1dp" />
+
+
+                    <!-- My Favourites -->
+
+                    <!-- Settings -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/rate_app_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Rate App"
+                        android:textColor="@color/black"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/ic_star"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#000000"
+                        app:strokeColor="#000000"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/terms_conditions_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Terms and Conditions"
+                        android:textColor="@color/black"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/ic_terms_condition"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#000000"
+                        app:strokeColor="#000000"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/resetPassButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Reset Password"
+                        android:textColor="@color/black"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/ic_privacy_policy"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#000000"
+                        app:strokeColor="#000000"
+                        app:strokeWidth="1dp" />
+
+                    <!-- Sign Out -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/signOutButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:text="Sign Out"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#FF0000" />
+                </LinearLayout>
+
+                <!-- Bottom Navigation -->
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>
