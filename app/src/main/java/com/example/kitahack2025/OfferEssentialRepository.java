@@ -28,7 +28,7 @@ public class OfferEssentialRepository {
     }
 
     public interface OnOfferEssentialsLoadedListener {
-        void onOfferEssentialsLoaded(List<EssentialItem> items);
+        void onOfferEssentialsLoaded(List<OfferEssential> items);
         void onError(Exception e);
     }
 
@@ -36,7 +36,7 @@ public class OfferEssentialRepository {
         db.collection(COLLECTION_NAME)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<EssentialItem> items = new ArrayList<>();
+                    List<OfferEssential> items = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         try {
                             String name = document.getString("name");
@@ -65,7 +65,7 @@ public class OfferEssentialRepository {
                             Long createdAt = document.getLong("createdAt");
 
                             if (name != null && !name.isEmpty()) {
-                                EssentialItem item = new EssentialItem(
+                                OfferEssential item = new OfferEssential(
                                         name,
                                         foodCategory != null ? foodCategory : "",
                                         description != null ? description : "",
@@ -99,7 +99,7 @@ public class OfferEssentialRepository {
                 .addOnFailureListener(listener::onError);
     }
 
-    public void addOfferItem(EssentialItem item, OnOfferCompleteListener listener) {
+    public void addOfferItem(OfferEssential item, OnOfferCompleteListener listener) {
         // Get current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 

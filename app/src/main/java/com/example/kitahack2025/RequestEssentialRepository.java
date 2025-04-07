@@ -1,20 +1,16 @@
 package com.example.kitahack2025;
 
-import static java.security.AccessController.getContext;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 import android.util.Log;
-import android.widget.Toast;
 
 public class RequestEssentialRepository {
     private static final String TAG = "RequestEssentialRepository";
@@ -31,12 +27,12 @@ public class RequestEssentialRepository {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public interface OnRequestItemsLoadedListener {
+    public interface OnRequestEssentialsLoadedListener {
         void onRequestEssentialsLoaded(List<RequestEssential> items);
         void onError(Exception e);
     }
 
-    public void getAllRequestItems(OnRequestItemsLoadedListener listener) {
+    public void getAllRequestItems(OnRequestEssentialsLoadedListener listener) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String email = currentUser.getEmail();
 

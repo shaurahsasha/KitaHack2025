@@ -15,17 +15,17 @@ public class OfferReliefRepository {
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
 
-    public ReliefItem() {
+    public OfferReliefRepository() {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
     }
 
     public interface OnReliefItemsLoadedListener {
-        void onReliefItemsLoaded(List<ReliefItem> items);
+        void onReliefItemsLoaded(List<OfferRelief> items);
         void onError(Exception e);
     }
 
-    public void addReliefItem(ReliefItem item) {
+    public void addReliefItem(OfferRelief item) {
         FirebaseUser currentUser = auth.getCurrentUser();
 
         if (currentUser == null) {

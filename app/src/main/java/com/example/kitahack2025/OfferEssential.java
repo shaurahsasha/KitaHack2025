@@ -5,41 +5,61 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class ReliefItem implements Serializable {
-
-    private String name, category, description, quantity, pickupTime, location, imageUrl, email, documentId, status, ownerProfileImageUrl, offerType;
+public class OfferEssential implements Serializable {
+    private String name,essentialCategory, description, category, expiryDate, quantity, pickupTime, location, imageUrl, documentId, status, ownerProfileImageUrl, offerType, email;
     private int imageResourceId;
     private long createdAt;
+    private String feedback;
+    private String receiverEmail;
+    private String locationArea; // e.g., "Bukit Jalil"
+    private String locationState; // e.g., "Kuala Lumpur"
 
-    public ReliefItem(String name, String category, String description, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String email, String ownerProfileImageUrl, String offerType){
+    // Constructor
+    public OfferEssential() {
+        // Required empty constructor for Firestore
+    }
 
+    public OfferEssential(String name, String foodCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String offerType, String ownerProfileImageUrl, String email) {
         this.name = name;
-        this.category = category;
+        this.essentialCategory = essentialCategory;
         this.description = description;
+        this.category = category;
+        this.expiryDate = expiryDate;
         this.quantity = quantity;
         this.pickupTime = pickupTime;
         this.location = location;
         this.imageResourceId = imageResourceId;
         this.imageUrl = imageUrl;
-        this.email = email;
-        this.documentId = null; // Will be set after Firestore creates the document
-        this.status = "active"; // Default status
-        this.createdAt = System.currentTimeMillis(); // Set current time as default
         this.ownerProfileImageUrl = ownerProfileImageUrl;
+        this.status = "active";
+        this.createdAt = System.currentTimeMillis();
         this.offerType = offerType;
-
+        this.email = email;
+        // Parse location into area and state
+        String[] locationParts = location.split(",");
+        this.locationArea = locationParts[0].trim();
+        this.locationState = locationParts.length > 1 ? locationParts[1].trim() : "";
     }
 
+    // Getter methods
     public String getName() {
         return name;
+    }
+
+    public String getFoodCategory() {
+        return essentialCategory;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getExpiredDate() {
+        return expiryDate;
     }
 
     public String getQuantity() {
@@ -60,10 +80,6 @@ public class ReliefItem implements Serializable {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getDocumentId() {
@@ -113,5 +129,37 @@ public class ReliefItem implements Serializable {
 
     public void setOfferType(String offerType){
         this.offerType = offerType;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    public String getReceiverEmail() {
+        return receiverEmail;
+    }
+
+    public void setReceiverEmail(String receiverEmail) {
+        this.receiverEmail = receiverEmail;
+    }
+
+    public String getLocationArea() {
+        return locationArea;
+    }
+
+    public String getLocationState() {
+        return locationState;
     }
 }

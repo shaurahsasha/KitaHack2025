@@ -182,7 +182,7 @@ public class OfferReliefFragment extends Fragment {
             String offerType = "NonFood";
 
             // Create new OfferItem with owner username
-            ReliefItem newOffer = new ReliefItem (
+            OfferRelief newOffer = new OfferRelief(
                     name,
                     category,
                     description,

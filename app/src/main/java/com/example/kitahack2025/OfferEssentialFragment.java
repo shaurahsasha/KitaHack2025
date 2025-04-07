@@ -232,7 +232,7 @@ public class OfferEssentialFragment extends Fragment {
                 currentUser.getPhotoUrl().toString() : "";
 
         // Create new offer with all fields including profile image URL
-        EssentialItem newOffer = new EssentialItem(
+        OfferEssential newOffer = new OfferEssential(
                 name,
                 essentialCategory,
                 description,
