@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D3D3D3"
-    tools:context=".ShelterFragment">
+    tools:context=".ShelterMedicalCampFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/toolbarContent"
+            android:id="@+id/normal_toolbar_content2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -28,14 +28,13 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/ic_aegisaqua_logo"
-                android:background="@drawable/background_logo" />
+                android:src="@drawable/ic_aegisaqua_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Shelters"
+                android:text="Community"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -46,16 +45,16 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/searchButton"
+                android:id="@+id/search_icon2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_search" />
 
             <ImageView
-                android:id="@+id/notificationButton"
+                android:id="@+id/menu_icon2"
                 android:layout_width="30dp"
-                android:layout_height="23dp"
+                android:layout_height="30dp"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_notifications" />
         </LinearLayout>
@@ -64,7 +63,7 @@
             android:id="@+id/search_layout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#808080"
+            android:background="#D3D3D3"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -100,11 +99,11 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@null"
-                    android:hint="shelters"
+                    android:hint="events"
+                    android:textColor="@color/black"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -161,9 +160,9 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="sans-serif"
-                    android:text="Would you be interested in joining AegisAqua volunteers to rescue flood victims?"
+                    android:text="Would you be interested in joining SharePlate volunteers to rescue surplus food?"
                     android:textAlignment="center"
-                    android:textColor="#025E73"
+                    android:textColor="#228B22"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -177,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginHorizontal="8dp"
-                    android:backgroundTint="#025E73"
+                    android:backgroundTint="#228B22"
                     android:fontFamily="sans-serif"
                     android:text="I'm interested >"
                     android:textSize="12sp"
@@ -195,12 +194,61 @@
                     android:background="@drawable/background_button"
                     android:fontFamily="sans-serif"
                     android:text="Not right now"
-                    android:textColor="#025E73"
+                    android:textColor="#228B22"
                     android:textSize="12sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/interestedButton"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/interestedButton"
                     app:layout_constraintWidth_percent="0.4" />
+
+                <LinearLayout
+                    android:id="@+id/filterButtonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/interestedButton">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/allEventsButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_marginEnd="4dp"
+                        android:text="All"
+                        android:textColor="@color/primary"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:strokeColor="@color/primary"
+                        app:cornerRadius="100dp"
+                        android:padding="0dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/volunteeringButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="13"
+                        android:layout_marginHorizontal="8dp"
+                        android:text="Volunteering"
+                        android:textColor="@color/primary"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:strokeColor="@color/primary"
+                        app:cornerRadius="100dp"
+                        android:padding="0dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/campaignsButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:layout_marginStart="4dp"
+                        android:text="Campaigns"
+                        android:textColor="@color/primary"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:strokeColor="@color/primary"
+                        app:cornerRadius="100dp"
+                        android:padding="0dp"/>
+                </LinearLayout>
 
                 <View
                     android:id="@+id/view"
@@ -213,63 +261,34 @@
                     app:layout_constraintWidth_percent="0.95"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:id="@+id/filterButtonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interestedButton">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/allSheltersButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:layout_marginEnd="4dp"
-                        android:text="All"
-                        android:textColor="#025E73"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:strokeColor="#025E73"
-                        app:cornerRadius="100dp"
-                        android:padding="0dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/medicalCampsButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="13"
-                        android:layout_marginHorizontal="8dp"
-                        android:text="Medical Camps"
-                        android:textColor="#025E73"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:strokeColor="#025E73"
-                        app:cornerRadius="100dp"
-                        android:padding="0dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/evacuationButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:layout_marginStart="4dp"
-                        android:text="Evacuation"
-                        android:textColor="#025E73"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:strokeColor="#025E73"
-                        app:cornerRadius="100dp"
-                        android:padding="0dp"/>
-                </LinearLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:id="@+id/shelterGrid"
+                android:id="@+id/event_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
         </LinearLayout>
     </ScrollView>
+
+    <!--    <FrameLayout-->
+    <!--        android:layout_width="409dp"-->
+    <!--        android:layout_height="58dp"-->
+    <!--        android:layout_marginStart="1dp"-->
+    <!--        android:layout_marginEnd="1dp"-->
+    <!--        android:layout_marginBottom="15dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent">-->
+
+    <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--            android:id="@+id/bottomNavigationView"-->
+    <!--            android:layout_width="346dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:background="@drawable/bottom_nav_background"-->
+    <!--            app:menu="@menu/bottom_navigation_menu" />-->
+    <!--    </FrameLayout>-->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

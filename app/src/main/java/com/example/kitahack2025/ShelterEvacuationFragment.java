@@ -4,11 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ShelterFragment extends Fragment {
+public class ShelterEvacuationFragment extends Fragment {
 
     private Toolbar toolbar;
     private ImageView searchIcon, notificationIV, backArrow, imgView;
@@ -47,28 +48,29 @@ public class ShelterFragment extends Fragment {
     private LinearLayout searchLayout;
     private View normalToolbarContent;
     private ShelterRepo shelterRepo;
+
     private MaterialButton allSheltersButton, medicalCampsButton, evacuationButton;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shelter, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_shelter_evacuation, container, false);
 
         shelterRepo = new ShelterRepo();
         fetchSheltersFromDatabase();
 
         // Initialize views
         toolbar = view.findViewById(R.id.toolbar2);
-        searchIcon = view.findViewById(R.id.searchButton);
-        allSheltersButton = view.findViewById(R.id.allSheltersButton);
-        medicalCampsButton = view.findViewById(R.id.medicalCampsButton);
-        evacuationButton = view.findViewById(R.id.evacuationButton);
-        shelterGrid = view.findViewById(R.id.shelterGrid);
+        searchIcon = view.findViewById(R.id.search_icon2);
+        allSheltersButton = view.findViewById(R.id.allEventsButton);
+        medicalCampsButton = view.findViewById(R.id.volunteeringButton);
+        evacuationButton = view.findViewById(R.id.campaignsButton);
+        shelterGrid = view.findViewById(R.id.event_grid);
         searchEditText = view.findViewById(R.id.search_edit_text2);
         searchLayout = view.findViewById(R.id.search_layout2);
         backArrow = view.findViewById(R.id.back_arrow2);
-        normalToolbarContent = view.findViewById(R.id.toolbarContent);
-        notificationIV = view.findViewById(R.id.notificationButton);
+        normalToolbarContent = view.findViewById(R.id.normal_toolbar_content2);
+        notificationIV = view.findViewById(R.id.menu_icon2);
         imgView = view.findViewById(R.id.imageView6);
         joinPromptText = view.findViewById(R.id.joinPromptTextView);
         interestedButton = view.findViewById(R.id.interestedButton);
@@ -118,9 +120,9 @@ public class ShelterFragment extends Fragment {
             }
         });
 
-        allSheltersButton.setBackgroundColor(getResources().getColor(R.color.primary));
-        allSheltersButton.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-        allSheltersButton.setTextColor(Color.WHITE);
+        evacuationButton.setBackgroundColor(getResources().getColor(R.color.primary));
+        evacuationButton.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+        evacuationButton.setTextColor(Color.WHITE);
 
         // Initialize views
         allSheltersButton.setOnClickListener(v -> {
@@ -128,17 +130,16 @@ public class ShelterFragment extends Fragment {
             navigateToFragment(new ShelterFragment());
         });
 
-        evacuationButton.setOnClickListener(v -> {
-            updateFilterButtonStates(allSheltersButton, medicalCampsButton, evacuationButton);
-            navigateToFragment(new ShelterEvacuationFragment());
-        });
-
         medicalCampsButton.setOnClickListener(v -> {
-            updateFilterButtonStates(allSheltersButton, medicalCampsButton, evacuationButton);
+            updateFilterButtonStates(medicalCampsButton, allSheltersButton, evacuationButton);
             navigateToFragment(new ShelterMedicalCampFragment());
         });
-        return view;
 
+        evacuationButton.setOnClickListener(v -> {
+            updateFilterButtonStates(evacuationButton, allSheltersButton, medicalCampsButton);
+            navigateToFragment(new ShelterEvacuationFragment());
+        });
+        return view;
     }
 
     public void respondCheck(View view) {
@@ -198,16 +199,14 @@ public class ShelterFragment extends Fragment {
                     joinPromptText.setVisibility(View.GONE);
                     interestedButton.setVisibility(View.GONE);
                     notInterestedButton.setVisibility(View.GONE);
-                    Toast.makeText(view.getContext(), "Thank you for joining the community!",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Thank you for joining the community!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     imgView.setVisibility(View.VISIBLE);
                     joinPromptText.setVisibility(View.VISIBLE);
                     interestedButton.setVisibility(View.VISIBLE);
                     notInterestedButton.setVisibility(View.VISIBLE);
-                    Toast.makeText(view.getContext(), "Failed to to join: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Failed to to join: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -228,17 +227,25 @@ public class ShelterFragment extends Fragment {
                     joinPromptText.setVisibility(View.GONE);
                     interestedButton.setVisibility(View.GONE);
                     notInterestedButton.setVisibility(View.GONE);
-                    Toast.makeText(view.getContext(), "Thank you for joining the community!",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Thank you for joining the community!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     imgView.setVisibility(View.VISIBLE);
                     joinPromptText.setVisibility(View.VISIBLE);
                     interestedButton.setVisibility(View.VISIBLE);
                     notInterestedButton.setVisibility(View.VISIBLE);
-                    Toast.makeText(view.getContext(), "Failed to to join: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Failed to to join: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void showShelters(List<Shelter> shelters) {
+        // Clear existing views
+        shelterGrid.removeAllViews();
+
+        // Add events to the grid
+        for (Shelter shelter : shelters) {
+            addSheltersView(shelter);
+        }
     }
 
     private void navigateToFragment(Fragment fragment) {
@@ -259,51 +266,42 @@ public class ShelterFragment extends Fragment {
 
         shelterRepo.getAllShelterItems(new ShelterRepo.OnShelterItemsLoadedListener() {
             @Override
-            public void onShelterItemsLoaded(List<Shelter> items) {
-                if (!isAdded() || getView() == null) {
-                    Log.e("ShelterFragment", "Fragment not attached, skipping UI update.");
-                    return;
-                }
+            public void onShelterItemsLoaded(List<Shelter> shelters) {
+//              Filter events to only include those with "campaign" as typeOfEvents
+                allShelters = shelters.stream()
+                        .filter(event -> "Campaigns".equalsIgnoreCase(event.getTypeOfShelters()))
+                        .collect(Collectors.toList());
 
-                requireActivity().runOnUiThread(() -> {
-                    allShelters.clear();
-                    allShelters.addAll(items);
-                    for (Shelter item : items) {
-                        addSheltersView(item);
-                    }
-                });
+                // Clear existing views
+                shelterGrid.removeAllViews();
+
+                // Add filtered events to the grid
+                for (Shelter shelter : allShelters) {
+                    addSheltersView(shelter);
+                }
             }
 
             @Override
             public void onError(Exception e) {
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Error loading shelters: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getContext(), "Error loading events: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, currentUserEmail);
     }
-
     private void addSheltersView(Shelter shelter) {
-        if (!isAdded() || getView() == null) {
-            Log.e("ShelterFragment", "Fragment not attached to UI, skipping shelter addition.");
-            return;
-        }
+        View eventItem = getLayoutInflater().inflate(R.layout.item_shelter_detail, shelterGrid, false);
 
-        View shelterItem = getLayoutInflater().inflate(R.layout.item_shelter_detail, shelterGrid, false);
+        ImageView eventImg = eventItem.findViewById(R.id.item_image);
+        TextView eventName = eventItem.findViewById(R.id.item_name);
+        TextView eventDate = eventItem.findViewById(R.id.item_date);
+        TextView eventLocation = eventItem.findViewById(R.id.item_location);
+        TextView eventDesc = eventItem.findViewById(R.id.item_desc);
+        Button joinButton = eventItem.findViewById(R.id.BtnJoin);
 
-        ImageView shelterImg = shelterItem.findViewById(R.id.item_image);
-        TextView shelterName = shelterItem.findViewById(R.id.item_name);
-        TextView shelterDate = shelterItem.findViewById(R.id.item_date);
-        TextView shelterLocation = shelterItem.findViewById(R.id.item_location);
-        TextView shelterDesc = shelterItem.findViewById(R.id.item_desc);
-        Button joinButton = shelterItem.findViewById(R.id.BtnJoin);
-
-        // Set event details
-        shelterImg.setImageResource(shelter.getImageResourceId());
-        shelterName.setText(shelter.getName());
-        shelterDate.setText("Date : " + (shelter.getDate() != null ? shelter.getDate() : "N/A"));
-        shelterLocation.setText("Location : " + (shelter.getLocation() != null ? shelter.getLocation() : "N/A"));
-        shelterDesc.setText("Description : " + (shelter.getDescription() != null ? shelter.getDescription() : "N/A"));
+        eventImg.setImageResource(shelter.getImageResourceId());
+        eventName.setText(shelter.getName());
+        eventDate.setText("Date : " + (shelter.getDate() != null ? shelter.getDate() : "N/A"));
+        eventLocation.setText("Location : " + (shelter.getLocation() != null ? shelter.getLocation() : "N/A"));
+        eventDesc.setText("Description : " + (shelter.getDescription() != null ? shelter.getDescription() : "N/A"));
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -314,8 +312,8 @@ public class ShelterFragment extends Fragment {
                 // Fetch the user's joined events from Firestore
                 firestore.collection("users")
                         .document(currentEmail)
-                        .collection("joinedShelters")
-                        .whereEqualTo("shelterName", shelter.getName())
+                        .collection("joinedEvents")
+                        .whereEqualTo("eventName", shelter.getName())
                         .get()
                         .addOnSuccessListener(querySnapshot -> {
                             if (!querySnapshot.isEmpty()) {
@@ -348,7 +346,7 @@ public class ShelterFragment extends Fragment {
                         });
             }
         }
-        shelterGrid.addView(shelterItem);
+        shelterGrid.addView(eventItem);
     }
 
     private void filterShelters(String query) {
@@ -368,7 +366,7 @@ public class ShelterFragment extends Fragment {
                                     item.getDescription().toLowerCase().contains(lowercaseQuery))
                     .collect(Collectors.toList());
 
-            for (Shelter shelter : filteredShelters) {
+            for (Shelter shelter: filteredShelters) {
                 addSheltersView(shelter);
             }
         }

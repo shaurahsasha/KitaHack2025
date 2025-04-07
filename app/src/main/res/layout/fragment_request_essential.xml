@@ -87,7 +87,7 @@
                     android:id="@+id/essential_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Food Name"
+                    android:hint="Essential Name"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"/>
@@ -102,7 +102,7 @@
                     android:id="@+id/essential_category_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Food Category"
+                    android:hint="Essential Category"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"/>
