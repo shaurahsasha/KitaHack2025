@@ -7,6 +7,14 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+
+    <string-array name="shelter_types">
+        <item>Evacuation</item>
+        <item>Temporary</item>
+        <item>Medical</item>
+        <item>Pet-friendly</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
