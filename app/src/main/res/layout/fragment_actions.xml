@@ -44,7 +44,7 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/menu_icon2"
+                android:id="@+id/notificationButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="16dp"
@@ -138,7 +138,7 @@
                 android:backgroundTint="#025E73"
                 android:elevation="4dp"
                 android:padding="16dp"
-                android:text="Coordinate Shelters"
+                android:text="Host Shelters"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
 
