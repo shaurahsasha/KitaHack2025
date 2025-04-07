@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="110dp"
                 android:text="Actions"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -43,12 +43,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <ImageView
-                android:id="@+id/notificationButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_notifications" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -138,7 +132,7 @@
                 android:backgroundTint="#025E73"
                 android:elevation="4dp"
                 android:padding="16dp"
-                android:text="Host Shelters"
+                android:text="Coordinate Shelters"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
 
