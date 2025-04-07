@@ -4,16 +4,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 import android.util.Log;
 
-public class OfferEssentialRepository {
+public class EssentialItemRepository {
     private static final String TAG = "OfferEssentialRepository";
     private static final String COLLECTION_NAME = "allOfferEssentials";
     private final FirebaseFirestore db;
@@ -24,20 +23,20 @@ public class OfferEssentialRepository {
         void onOfferFailure(Exception e);
     }
 
-    public OfferEssentialRepository() {
+    public EssentialItemRepository() {
         this.db = FirebaseFirestore.getInstance();
     }
 
     public interface OnOfferEssentialsLoadedListener {
-        void onOfferEssentialsLoaded(List<OfferEssential> items);
+        void onOfferEssentialsLoaded(List<EssentialItem> items);
         void onError(Exception e);
     }
 
-    public void getAllDonationItems(OnOfferEssentialsLoadedListener listener) {
+    public void getAllOfferItems(OnOfferEssentialsLoadedListener listener) {
         db.collection(COLLECTION_NAME)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<OfferEssential> items = new ArrayList<>();
+                    List<EssentialItem> items = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         try {
                             String name = document.getString("name");
@@ -51,7 +50,7 @@ public class OfferEssentialRepository {
                             String ownerEmail = document.getString("email");
                             String status = document.getString("status");
                             String ownerProfileImageUrl = document.getString("ownerProfileImageUrl");
-                            String donateType = document.getString("donateType");
+                            String offerType = document.getString("offerType");
                             String feedback = document.getString("feedback");
                             String receiverEmail = document.getString("receiverEmail");
 
@@ -66,7 +65,7 @@ public class OfferEssentialRepository {
                             Long createdAt = document.getLong("createdAt");
 
                             if (name != null && !name.isEmpty()) {
-                                OfferEssential item = new OfferEssential(
+                                EssentialItem item = new EssentialItem(
                                         name,
                                         foodCategory != null ? foodCategory : "",
                                         description != null ? description : "",
@@ -77,7 +76,7 @@ public class OfferEssentialRepository {
                                         location != null ? location : "",
                                         imageResourceId,
                                         imageUrl,
-                                        donateType,
+                                        offerType,
                                         ownerProfileImageUrl != null ? ownerProfileImageUrl : "",
                                         ownerEmail
                                 );
@@ -100,7 +99,7 @@ public class OfferEssentialRepository {
                 .addOnFailureListener(listener::onError);
     }
 
-    public void addDonationItem(OfferEssential item, OnOfferCompleteListener listener) {
+    public void addOfferItem(EssentialItem item, OnOfferCompleteListener listener) {
         // Get current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -211,7 +210,7 @@ public class OfferEssentialRepository {
         void onUpdateFailure(Exception e);
     }
 
-    public void updateDonationWithFields(String documentId, Map<String, Object> updates,
+    public void updateOfferWithFields(String documentId, Map<String, Object> updates,
                                          OnStatusUpdateListener listener) {
         db.collection(COLLECTION_NAME)
                 .document(documentId)

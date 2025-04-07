@@ -52,7 +52,7 @@ public class OfferEssentialFragment extends Fragment {
     protected EditText essentialNameInput, essentialCategoryInput, expiryDateInput, quantityInput, pickupTimeInput, locationInput;
     protected Button submitButton;
     private ImageView backButton;
-    private OfferEssentialRepository offerEssentialRepository;
+    private EssentialItemRepository essentialItemRepository;
     private Calendar calendar;
     private SimpleDateFormat dateFormatter;
     private Calendar timeCalendar;
@@ -70,7 +70,7 @@ public class OfferEssentialFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        offerEssentialRepository = new OfferEssentialRepository();
+        essentialItemRepository = new EssentialItemRepository();
         calendar = Calendar.getInstance();
         timeCalendar = Calendar.getInstance();
         dateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
@@ -181,7 +181,7 @@ public class OfferEssentialFragment extends Fragment {
                         // Get download URL
                         imageRef.getDownloadUrl()
                                 .addOnSuccessListener(downloadUri -> {
-                                    // Create and save donation with image URL
+                                    // Create and save offer with image URL
                                     saveOfferWithImage(downloadUri.toString());
                                     progressBar.setVisibility(View.GONE);
                                     submitButton.setEnabled(true);
@@ -202,7 +202,7 @@ public class OfferEssentialFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     });
         } else {
-            // Save donation without image
+            // Save offer without image
             saveOfferWithImage(null);
             progressBar.setVisibility(View.GONE);
             submitButton.setEnabled(true);
@@ -218,12 +218,12 @@ public class OfferEssentialFragment extends Fragment {
         String quantity = quantityInput.getText().toString();
         String pickupTime = pickupTimeInput.getText().toString();
         String location = locationInput.getText().toString();
-        String donateType = "Food";
+        String offerType = "Food";
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String ownerEmail = currentUser.getEmail();
         if (currentUser == null) {
-            Toast.makeText(getContext(), "You must be logged in to donate", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "You must be logged in to offer", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -231,8 +231,8 @@ public class OfferEssentialFragment extends Fragment {
         String ownerProfileImageUrl = currentUser.getPhotoUrl() != null ?
                 currentUser.getPhotoUrl().toString() : "";
 
-        // Create new donation with all fields including profile image URL
-        OfferEssential newDonation = new OfferEssential(
+        // Create new offer with all fields including profile image URL
+        EssentialItem newOffer = new EssentialItem(
                 name,
                 essentialCategory,
                 description,
@@ -244,15 +244,15 @@ public class OfferEssentialFragment extends Fragment {
                 R.drawable.img_placeholder,
                 imageUrl,
                 ownerUsername,
-                donateType,
+                offerType,
                 ownerProfileImageUrl
         );
 
         // Save to repository
-        OfferEssentialRepository repository = new OfferEssentialRepository();
-        repository.addDonationItem(newDonation, new OfferEssentialRepository.OnOfferCompleteListener() {
+        EssentialItemRepository repository = new EssentialItemRepository();
+        repository.addOfferItem(newOffer, new EssentialItemRepository.OnOfferCompleteListener() {
             @Override
-            public void onDonationSuccess() {
+            public void onOfferSuccess() {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Offer added successfully", Toast.LENGTH_SHORT).show();
                     // Clear form or navigate back
@@ -289,7 +289,7 @@ public class OfferEssentialFragment extends Fragment {
                     notificationData.put("imageUrl", imageUrl);
                     notificationData.put("expiredDate", expiredDate);
                     notificationData.put("status", "unread");
-                    notificationData.put("message", ownersUsername + " has a new donation!");
+                    notificationData.put("message", ownersUsername + " has a new offer!");
                     notificationData.put("notiType", "all");
 
                     db.collection("notifications")
@@ -312,7 +312,7 @@ public class OfferEssentialFragment extends Fragment {
                     notificationData.put("imageUrl", imageUrl);
                     notificationData.put("expiredDate", expiredDate);
                     notificationData.put("status", "unread");
-                    notificationData.put("message", ownerEmail + " has a new donation!");
+                    notificationData.put("message", ownerEmail + " has a new offer!");
                     notificationData.put("notiType", "all");
 
                     db.collection("notifications")

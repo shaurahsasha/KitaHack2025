@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class OfferEssential implements Serializable {
+public class EssentialItem implements Serializable {
     private String name,essentialCategory, description, category, expiryDate, quantity, pickupTime, location, imageUrl, documentId, status, ownerProfileImageUrl, offerType, email;
     private int imageResourceId;
     private long createdAt;
@@ -15,11 +15,11 @@ public class OfferEssential implements Serializable {
     private String locationState; // e.g., "Kuala Lumpur"
 
     // Constructor
-    public OfferEssential() {
+    public EssentialItem() {
         // Required empty constructor for Firestore
     }
 
-    public OfferEssential(String name, String foodCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String donateType, String ownerProfileImageUrl, String email) {
+    public EssentialItem(String name, String foodCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String offerType, String ownerProfileImageUrl, String email) {
         this.name = name;
         this.essentialCategory = essentialCategory;
         this.description = description;
@@ -33,7 +33,7 @@ public class OfferEssential implements Serializable {
         this.ownerProfileImageUrl = ownerProfileImageUrl;
         this.status = "active";
         this.createdAt = System.currentTimeMillis();
-        this.offerType = donateType;
+        this.offerType = offerType;
         this.email = email;
         // Parse location into area and state
         String[] locationParts = location.split(",");
@@ -123,11 +123,11 @@ public class OfferEssential implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getDonateType(){
+    public String getOfferType(){
         return offerType;
     }
 
-    public void setDonateType(String donateType){
+    public void setOfferType(String offerType){
         this.offerType = offerType;
     }
 

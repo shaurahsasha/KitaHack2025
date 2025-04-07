@@ -75,7 +75,7 @@ public class ActionsFragment extends Fragment {
 
         // Set click listener
         offerEssentialButton.setOnClickListener(v -> {
-            // Navigate to DonateItemFragment
+            // Navigate to OfferEssentialFragment
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new OfferEssentialFragment())
@@ -84,7 +84,7 @@ public class ActionsFragment extends Fragment {
         });
 
         offerReliefButton.setOnClickListener(v -> {
-            // Navigate to DonateNonFoodFragment
+            // Navigate to OfferReliefFragment
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new OfferReliefFragment())
