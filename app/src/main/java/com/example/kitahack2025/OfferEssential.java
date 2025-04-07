@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class OfferEssential implements Serializable {
-    private String name,foodCategory, description, category, expiredDate, quantity, pickupTime, location, imageUrl, documentId, status, ownerProfileImageUrl, donateType, email;
+    private String name,essentialCategory, description, category, expiryDate, quantity, pickupTime, location, imageUrl, documentId, status, ownerProfileImageUrl, offerType, email;
     private int imageResourceId;
     private long createdAt;
     private String feedback;
@@ -21,10 +21,10 @@ public class OfferEssential implements Serializable {
 
     public OfferEssential(String name, String foodCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String donateType, String ownerProfileImageUrl, String email) {
         this.name = name;
-        this.foodCategory = foodCategory;
+        this.essentialCategory = essentialCategory;
         this.description = description;
         this.category = category;
-        this.expiredDate = expiredDate;
+        this.expiryDate = expiryDate;
         this.quantity = quantity;
         this.pickupTime = pickupTime;
         this.location = location;
@@ -33,7 +33,7 @@ public class OfferEssential implements Serializable {
         this.ownerProfileImageUrl = ownerProfileImageUrl;
         this.status = "active";
         this.createdAt = System.currentTimeMillis();
-        this.donateType = donateType;
+        this.offerType = donateType;
         this.email = email;
         // Parse location into area and state
         String[] locationParts = location.split(",");
@@ -47,7 +47,7 @@ public class OfferEssential implements Serializable {
     }
 
     public String getFoodCategory() {
-        return foodCategory;
+        return essentialCategory;
     }
 
     public String getDescription() {
@@ -59,7 +59,7 @@ public class OfferEssential implements Serializable {
     }
 
     public String getExpiredDate() {
-        return expiredDate;
+        return expiryDate;
     }
 
     public String getQuantity() {
@@ -124,11 +124,11 @@ public class OfferEssential implements Serializable {
     }
 
     public String getDonateType(){
-        return donateType;
+        return offerType;
     }
 
     public void setDonateType(String donateType){
-        this.donateType = donateType;
+        this.offerType = offerType;
     }
 
     public String getEmail(){
