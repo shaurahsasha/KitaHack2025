@@ -2,16 +2,13 @@ package com.example.kitahack2025;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReliefItemRepository {
+public class OfferReliefRepository {
     private static final String OFFER_COLLECTION = "allOfferItems";
     private static final String REQUEST_COLLECTION = "requestFood";
     private static final String USERS_COLLECTION = "users";

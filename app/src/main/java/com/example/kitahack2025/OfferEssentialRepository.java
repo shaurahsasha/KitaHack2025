@@ -12,7 +12,7 @@ import java.util.Map;
 
 import android.util.Log;
 
-public class EssentialItemRepository {
+public class OfferEssentialRepository {
     private static final String TAG = "OfferEssentialRepository";
     private static final String COLLECTION_NAME = "allOfferEssentials";
     private final FirebaseFirestore db;
@@ -23,7 +23,7 @@ public class EssentialItemRepository {
         void onOfferFailure(Exception e);
     }
 
-    public EssentialItemRepository() {
+    public OfferEssentialRepository() {
         this.db = FirebaseFirestore.getInstance();
     }
 

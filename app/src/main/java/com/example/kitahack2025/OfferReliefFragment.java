@@ -34,7 +34,7 @@ public class OfferReliefFragment extends Fragment {
     protected EditText reliefNameInput, reliefCategoryInput, expiryDateInput, quantityInput, pickupTimeInput, locationInput, reliefDescInput;
     protected Button submitButton;
     private ImageView backButton;
-    private ReliefItemRepository reliefItemRepository;
+    private OfferReliefRepository offerReliefRepository;
     private Calendar timeCalendar;
     private SimpleDateFormat timeFormatter;
     protected ImageView itemImageView;
@@ -48,7 +48,7 @@ public class OfferReliefFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reliefItemRepository = new ReliefItemRepository();
+        offerReliefRepository = new OfferReliefRepository();
         timeCalendar = Calendar.getInstance();
         timeFormatter = new SimpleDateFormat("hh:mm a", Locale.US); // 12-hour format with AM/PM
 
@@ -197,7 +197,7 @@ public class OfferReliefFragment extends Fragment {
             );
 
             // Add to Firebase
-            reliefItemRepository.addReliefItem(newOffer);
+            offerReliefRepository.addReliefItem(newOffer);
 
             // Show success message and navigate back
             if (getContext() != null) {

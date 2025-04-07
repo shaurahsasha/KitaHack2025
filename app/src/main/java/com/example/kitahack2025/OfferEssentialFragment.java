@@ -52,7 +52,7 @@ public class OfferEssentialFragment extends Fragment {
     protected EditText essentialNameInput, essentialCategoryInput, expiryDateInput, quantityInput, pickupTimeInput, locationInput;
     protected Button submitButton;
     private ImageView backButton;
-    private EssentialItemRepository essentialItemRepository;
+    private OfferEssentialRepository offerEssentialRepository;
     private Calendar calendar;
     private SimpleDateFormat dateFormatter;
     private Calendar timeCalendar;
@@ -70,7 +70,7 @@ public class OfferEssentialFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        essentialItemRepository = new EssentialItemRepository();
+        offerEssentialRepository = new OfferEssentialRepository();
         calendar = Calendar.getInstance();
         timeCalendar = Calendar.getInstance();
         dateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
@@ -249,8 +249,8 @@ public class OfferEssentialFragment extends Fragment {
         );
 
         // Save to repository
-        EssentialItemRepository repository = new EssentialItemRepository();
-        repository.addOfferItem(newOffer, new EssentialItemRepository.OnOfferCompleteListener() {
+        OfferEssentialRepository repository = new OfferEssentialRepository();
+        repository.addOfferItem(newOffer, new OfferEssentialRepository.OnOfferCompleteListener() {
             @Override
             public void onOfferSuccess() {
                 if (getContext() != null) {
