@@ -15,7 +15,41 @@
         <item>Pet-friendly</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="get_started">Get Started</string>
+    <string name="already_have_account">Already have an Account? </string>
+    <string name="log_in">Log in</string>
+    <string name="aegis" translatable="false">Aegis</string>
+    <string name="aqua" translatable="false">Aqua</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="cancel">Cancel</string>
+    <string name="username">Username</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="update">Update</string>
+    <string name="notification">Notification</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_conditions">Terms Conditions</string>
+    <string name="logout">Logout</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change_picture">Change Picture</string>
+    <string name="default_web_client_id">738549068311-70396kc7ee16bi2otbv6lmr1cnofg8a8.apps.googleusercontent.com</string>
+    <string name="app_logo">SharePlate Logo</string>
+    <string name="search">Search</string>
+    <string name="notifications">Notifications</string>
+    <string name="sort">Sort</string>
+    <string name="back">Back</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="reset">Reset</string>
+    <string name="google_maps_key">YOUR_GOOGLE_MAPS_API_KEY</string>
 
 </resources>

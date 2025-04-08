@@ -38,7 +38,7 @@ public class HomePageActivity extends AppCompatActivity {
             Fragment fragment = null;
 
             if (itemId == R.id.navigation_home) {
-                //fragment = new HomeFragment();
+                fragment = new HomeFragment();
             } else if (itemId == R.id.navigation_shelter) {
                 fragment = new ShelterFragment();
             } else if (itemId == R.id.navigation_actions) {
@@ -65,7 +65,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Load the HomeFragment initially
         if (savedInstanceState == null) {
-            //handler.post(() -> replaceFragment(new HomeFragment()));
+            handler.post(() -> replaceFragment(new HomeFragment()));
         }
     }
 
