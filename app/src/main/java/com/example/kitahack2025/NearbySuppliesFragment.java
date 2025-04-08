@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NearbySuppliesFragment extends Fragment {
-    private static final String TAG = "NearbySuppliesFragment";
+    private static final String TAG = "NearbyItemsFragment";
     private RecyclerView recyclerView;
     private NearbySuppliesAdapter adapter;
     private OfferEssentialRepository offerEssentialRepository;
@@ -89,7 +89,7 @@ public class NearbySuppliesFragment extends Fragment {
                         userLocation = documents.getDocuments().get(0).getString("location");
                         Log.d(TAG, "getUserLocation: Found location: " + userLocation);
                         if (userLocation != null && !userLocation.isEmpty()) {
-                            loadNearbySupplies();
+                            loadNearbyItems();
                         } else {
                             showLoading(false);
                             showError("Please enable location services");
@@ -107,24 +107,26 @@ public class NearbySuppliesFragment extends Fragment {
                 });
     }
 
-    private void loadNearbySupplies() {
+    private void loadNearbyItems() {
         if (userLocation == null) {
-            Log.d(TAG, "loadNearbySupplies: No user location available");
+            Log.d(TAG, "loadNearbyItems: No user location available");
             showLoading(false);
             showError("Location not available");
             return;
         }
 
-        Log.d(TAG, "loadNearbySupplies: Loading items for location: " + userLocation);
-        offerEssentialRepository.getAllOfferItems(new OfferEssentialRepository.OnOfferEssentialsLoadedListener() {
+        Log.d(TAG, "loadNearbyItems: Loading items for location: " + userLocation);
+        
+        // Create a new instance of the listener interface
+        OfferEssentialRepository.OnOfferEssentialsLoadedListener listener = new OfferEssentialRepository.OnOfferEssentialsLoadedListener() {
             @Override
-            public void OnOfferEssentialsLoadedListener(List<OfferEssential> items) {
-                Log.d(TAG, "loadNearbySupplies: Loaded " + items.size() + " total items");
+            public void onOfferEssentialsLoaded(List<OfferEssential> items) {
+                Log.d(TAG, "loadNearbyItems: Loaded " + items.size() + " total items");
                 DistanceCalculator calc = new DistanceCalculator("AIzaSyD3paVgDTxJxSRCxUy0cj09SEee_fEB9Zc");
 
-                List<OfferEssential> nearbySupplies = new ArrayList<>();
+                List<OfferEssential> nearbyItems = new ArrayList<>();
                 int totalItems = items.size();
-                final int[] completedTasks = {0}; // Track completed distance calculations
+                final int[] completedTasks = {0};
 
                 for (OfferEssential item : items) {
                     if (item.getLocation() != null) {
@@ -133,32 +135,27 @@ public class NearbySuppliesFragment extends Fragment {
                             public void onSuccess(double distance) {
                                 Log.d(TAG, "Distance: " + distance + " for item: " + item.getName());
                                 if (distance < 4.0) {
-                                    nearbySupplies.add(item);
+                                    nearbyItems.add(item);
                                 }
-
-                                // Check if all calculations are done
                                 completedTasks[0]++;
                                 if (completedTasks[0] == totalItems) {
-                                    updateUI(nearbySupplies);
+                                    updateUI(nearbyItems);
                                 }
                             }
 
                             @Override
                             public void onFailure(String error) {
                                 Log.e(TAG, "Error calculating distance: " + error);
-
-                                // Still increment the counter to track progress
                                 completedTasks[0]++;
                                 if (completedTasks[0] == totalItems) {
-                                    updateUI(nearbySupplies);
+                                    updateUI(nearbyItems);
                                 }
                             }
                         });
                     } else {
-                        // No location for this item; increment counter directly
                         completedTasks[0]++;
                         if (completedTasks[0] == totalItems) {
-                            updateUI(nearbySupplies);
+                            updateUI(nearbyItems);
                         }
                     }
                 }
@@ -166,7 +163,7 @@ public class NearbySuppliesFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                Log.e(TAG, "loadNearbySupplies: Error loading items", e);
+                Log.e(TAG, "loadNearbyItems: Error loading items", e);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         showLoading(false);
@@ -174,21 +171,23 @@ public class NearbySuppliesFragment extends Fragment {
                     });
                 }
             }
-        });
+        };
+
+        // Pass the listener to the repository
+        offerEssentialRepository.getAllOfferItems(listener);
     }
 
-    private void updateUI(List<OfferEssential> nearbySupplies) {
+    private void updateUI(List<OfferEssential> nearbyItems) {
         getActivity().runOnUiThread(() -> {
-            if (!nearbySupplies.isEmpty()) {
-                adapter = new NearbySuppliesAdapter(nearbySupplies, item -> {
+            if (!nearbyItems.isEmpty()) {
+                adapter = new NearbySuppliesAdapter(nearbyItems, item -> {
                     Fragment detailFragment;
                     if ("Food".equals(item.getCategory())) {
-                        detailFragment = FoodItemDetailFragment.newInstance(item);
+                        detailFragment = OfferEssentialDetails.newInstance(item);
                     } else {
-                        detailFragment = NonFoodItemDetail.newInstance(item);
+                        detailFragment = OfferReliefDetails.newInstance(item);
                     }
 
-                    // Navigate to the detail fragment
                     requireActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment_container, detailFragment)

@@ -30,7 +30,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    android:contentDescription="App Logo"
+                    android:contentDescription="Back Button"
                     android:src="@drawable/ic_back" />
 
                 <!-- Toolbar Title -->
@@ -48,6 +48,21 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <!-- Map View -->
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0" />
+
+        <!-- List View -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/nearby_items_recycler_view"
             android:layout_width="match_parent"
