@@ -40,7 +40,9 @@
     <string name="logout">Logout</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="change_picture">Change Picture</string>
-    <string name="default_web_client_id">738549068311-70396kc7ee16bi2otbv6lmr1cnofg8a8.apps.googleusercontent.com</string>
+<!--    <string name="default_web_client_id">738549068311-70396kc7ee16bi2otbv6lmr1cnofg8a8.apps.googleusercontent.com</string>-->
+    <string name="default_web_client_id">5542448016-3roj551l653enlh8u2ds0g82ga9q5s2m.apps.googleusercontent.com</string>
+
     <string name="app_logo">SharePlate Logo</string>
     <string name="search">Search</string>
     <string name="notifications">Notifications</string>
