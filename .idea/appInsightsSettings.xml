@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.kitahack2025" />
+                  <option name="mobileSdkAppId" value="1:5542448016:android:40ff04108def2df7888115" />
+                  <option name="projectId" value="aegisaqua-a32ac" />
+                  <option name="projectNumber" value="5542448016" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
