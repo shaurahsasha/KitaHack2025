@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5542448016",
+    "project_id": "aegisaqua-a32ac",
+    "storage_bucket": "aegisaqua-a32ac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5542448016:android:40ff04108def2df7888115",
+        "android_client_info": {
+          "package_name": "com.example.kitahack2025"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDB7nOQRDqjGUVHnFPQoLgifMt6SQobPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
