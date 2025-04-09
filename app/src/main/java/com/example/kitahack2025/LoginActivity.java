@@ -32,6 +32,8 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     EditText signupEmail, signupPassword;
+
+    TextView cancelTextView;
     Button loginButton;
     ImageButton googleButton;
     FirebaseAuth mAuth;
@@ -52,6 +54,13 @@ public class LoginActivity extends AppCompatActivity {
         signupPassword = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         googleButton = findViewById(R.id.googleButton); // Make sure this button exists in activity_login.xml
+        cancelTextView = findViewById(R.id.cancelTextView);
+
+
+        cancelTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
 
         // Email/Password Login
         loginButton.setOnClickListener(new View.OnClickListener() {

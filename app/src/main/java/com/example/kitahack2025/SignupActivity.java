@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
+    TextView cancelTextView;
     EditText signupEmail, signupPassword, signupConfirmPassword;
     Button signupButton;
     ImageButton googleButton;
@@ -58,6 +60,13 @@ public class SignupActivity extends AppCompatActivity {
         signupConfirmPassword = findViewById(R.id.confirmPasswordEditText);
         signupButton = findViewById(R.id.loginButton);
         googleButton = findViewById(R.id.googleButton);
+        cancelTextView = findViewById(R.id.cancelTextView);
+
+
+        cancelTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
 
         // Email/Password Signup
         signupButton.setOnClickListener(new View.OnClickListener() {
