@@ -159,12 +159,12 @@ public class HostShelterFragment extends Fragment {
     }
 
     private void initializeViews(View view){
-        eventNameInput = view.findViewById(R.id.event_name_input);
+        eventNameInput = view.findViewById(R.id.shelter_name_input);
         eventDescriptionInput = view.findViewById(R.id.event_description_input);
-        eventTimeInput = view.findViewById(R.id.event_time_input);
-        eventDateInput = view.findViewById(R.id.event_date_input);
-        eventLocationInput = view.findViewById(R.id.event_location_input);
-        eventSeatsAvailableInput = view.findViewById(R.id.event_seats_available_input);
+        eventTimeInput = view.findViewById(R.id.operational_hours_input);
+        eventDateInput = view.findViewById(R.id.date_opened_input);
+        eventLocationInput = view.findViewById(R.id.shelter_address_input);
+        eventSeatsAvailableInput = view.findViewById(R.id.shelter_capacity_input);
         campaignButton = view.findViewById(R.id.event_campaigns_button);
         volunteerButton = view.findViewById(R.id.event_volunteer_button);
         submitButton = view.findViewById(R.id.submit_button);

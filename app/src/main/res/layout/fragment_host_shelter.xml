@@ -85,7 +85,7 @@
                 android:layout_marginBottom="16dp">
 
                 <EditText
-                    android:id="@+id/event_name_input"
+                    android:id="@+id/shelter_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Name"
@@ -117,7 +117,7 @@
                 app:endIconDrawable="@drawable/ic_time">
 
                 <EditText
-                    android:id="@+id/event_time_input"
+                    android:id="@+id/operational_hours_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Time"
@@ -136,7 +136,7 @@
                 app:endIconDrawable="@drawable/ic_calendar">
 
                 <EditText
-                    android:id="@+id/event_date_input"
+                    android:id="@+id/date_opened_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Date"
@@ -153,7 +153,7 @@
                 android:layout_marginBottom="16dp">
 
                 <EditText
-                    android:id="@+id/event_location_input"
+                    android:id="@+id/shelter_address_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
@@ -164,7 +164,7 @@
 
 
             <TextView
-                android:id="@+id/event_type_title"
+                android:id="@+id/shelter_contact_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
@@ -201,7 +201,7 @@
                 android:layout_marginBottom="24dp">
 
                 <EditText
-                    android:id="@+id/event_seats_available_input"
+                    android:id="@+id/shelter_capacity_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
