@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class RequestEssentialRepository {
     private static final String TAG = "RequestEssentialRepository";
-    private static final String COLLECTION_NAME = "essentialRequest";
+    private static final String COLLECTION_NAME = "allRequestItems";
     private final FirebaseFirestore db;
 
     // Define the interface for callbacks
@@ -128,7 +128,7 @@ public class RequestEssentialRepository {
         requestData.put("ownerProfileImageUrl", ownerProfileImageUrl);
         requestData.put("status", "active");
         requestData.put("createdAt", System.currentTimeMillis());
-        requestData.put("requestType", "Food");
+        requestData.put("requestType", "Essential");
 
         // Add to Firestore
         db.collection(COLLECTION_NAME)

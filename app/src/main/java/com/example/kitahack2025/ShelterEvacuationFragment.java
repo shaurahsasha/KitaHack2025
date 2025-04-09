@@ -290,10 +290,10 @@ public class ShelterEvacuationFragment extends Fragment {
     private void addSheltersView(Shelter shelter) {
         View eventItem = getLayoutInflater().inflate(R.layout.item_shelter_detail, shelterGrid, false);
 
-        ImageView eventImg = eventItem.findViewById(R.id.item_image);
+        ImageView eventImg = eventItem.findViewById(R.id.category_icon);
         TextView eventName = eventItem.findViewById(R.id.item_name);
         TextView eventDate = eventItem.findViewById(R.id.item_date);
-        TextView eventLocation = eventItem.findViewById(R.id.item_location);
+        TextView eventLocation = eventItem.findViewById(R.id.supply_distance);
         TextView eventDesc = eventItem.findViewById(R.id.item_desc);
         Button joinButton = eventItem.findViewById(R.id.BtnJoin);
 

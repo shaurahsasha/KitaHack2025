@@ -45,7 +45,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/item_location"
+                android:id="@+id/supply_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -73,7 +73,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/item_image"
+                android:id="@+id/category_icon"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"

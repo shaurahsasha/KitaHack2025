@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class OfferReliefRepository {
     private static final String OFFER_COLLECTION = "allOfferItems";
-    private static final String REQUEST_COLLECTION = "requestFood";
+    private static final String REQUEST_COLLECTION = "allRequestItems";
     private static final String USERS_COLLECTION = "users";
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
@@ -46,7 +46,7 @@ public class OfferReliefRepository {
         nonFoodData.put("email", item.getEmail());
         nonFoodData.put("status", item.getStatus());
         nonFoodData.put("createdAt", System.currentTimeMillis());
-        nonFoodData.put("offerType", "NonFood");
+        nonFoodData.put("offerType", "Relief");
 
         // Save the data to the database
         db.collection(OFFER_COLLECTION)

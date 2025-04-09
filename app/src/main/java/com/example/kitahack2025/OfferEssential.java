@@ -19,12 +19,12 @@ public class OfferEssential implements Serializable {
         // Required empty constructor for Firestore
     }
 
-    public OfferEssential(String name, String foodCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String offerType, String ownerProfileImageUrl, String email) {
+    public OfferEssential(String name, String essentialCategory, String description, String category, String expiredDate, String quantity, String pickupTime, String location, int imageResourceId, String imageUrl, String offerType, String ownerProfileImageUrl, String email) {
         this.name = name;
         this.essentialCategory = essentialCategory;
         this.description = description;
         this.category = category;
-        this.expiryDate = expiryDate;
+        this.expiryDate = expiredDate;
         this.quantity = quantity;
         this.pickupTime = pickupTime;
         this.location = location;
@@ -46,7 +46,7 @@ public class OfferEssential implements Serializable {
         return name;
     }
 
-    public String getFoodCategory() {
+    public String getEssentialCategory() {
         return essentialCategory;
     }
 

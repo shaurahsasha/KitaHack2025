@@ -1,6 +1,7 @@
 package com.example.kitahack2025;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -77,7 +78,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        checkUserExistence();
+        checkUserExistence();
         // Initialize views and repository
         initializeViews(rootView);
         donationItemRepo = new OfferEssentialRepository();
@@ -263,6 +264,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadItems() {
+        Log.d("HomeFragment", "loadItems() called"); // <-- ADD HERE
         swipeRefreshLayout.setRefreshing(true);
         allItems.clear();
         filteredListsCache.clear(); // Clear the cache when loading new items
@@ -270,17 +272,30 @@ public class HomeFragment extends Fragment {
         donationItemRepo.getAllOfferItems(new OfferEssentialRepository.OnOfferEssentialsLoadedListener() {
             @Override
             public void onOfferEssentialsLoaded(List<OfferEssential> donationItems) {
+                Log.d("HomeFragment", "onOfferEssentialsLoaded called"); // <-- ADD HERE
+                Log.d("HomeFragment", "Loaded items count: " + donationItems.size()); // <-- ADD HERE
+
+                // Print each item name
+                for (OfferEssential item : donationItems) {
+                    Log.d("HomeFragment", "Item: " + item.getName()); // <-- ADD HERE
+                }
+
+                Toast.makeText(getActivity(), "Loaded " + donationItems.size() + " items", Toast.LENGTH_SHORT).show(); // Optional toast
+
                 allItems.addAll(donationItems);
-                loadRequestItems();
+
+                loadRequestItems(); // <-- If this does filtering, the list might get reduced to 0 here
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getActivity(), "Error loading donation items: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("HomeFragment", "Error loading offer items", e); // <-- ADD HERE
+                Toast.makeText(getActivity(), "Error loading offer items: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
+
 
     private void loadRequestItems() {
         requestItemRepo.getAllRequestItems(new RequestEssentialRepository.OnRequestEssentialsLoadedListener() {
@@ -353,7 +368,7 @@ public class HomeFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemView = inflater.inflate(R.layout.donation_item_view, donationGrid, false);
 
-            ImageView itemImage = itemView.findViewById(R.id.item_image);
+            ImageView itemImage = itemView.findViewById(R.id.category_icon);
             TextView itemName = itemView.findViewById(R.id.item_name);
             TextView itemCategory = itemView.findViewById(R.id.item_category);
             TextView itemInfo = itemView.findViewById(R.id.item_expiredDate);
@@ -381,13 +396,19 @@ public class HomeFragment extends Fragment {
                         .centerCrop()
                         .into(itemImage);
             } else {
-                itemImage.setImageResource(item.getImageResourceId());
+                try {
+                    itemImage.setImageResource(item.getImageResourceId());
+                } catch (Resources.NotFoundException e) {
+                    Log.w("HomeFragment", "Invalid imageResourceId: " + item.getImageResourceId() + ". Using placeholder.");
+                    itemImage.setImageResource(R.drawable.placeholder_image);
+                }
             }
+
 
             itemName.setText(item.getName());
 
-            if ("Food".equals(item.getOfferType())) {
-                itemCategory.setText("Food Category : " + (item.getFoodCategory() != null ? item.getFoodCategory() : "N/A"));
+            if ("Essential".equals(item.getOfferType())) {
+                itemCategory.setText("Essential Category : " + (item.getEssentialCategory() != null ? item.getEssentialCategory() : "N/A"));
                 itemInfo.setText("Expires : " + (item.getExpiredDate() != null ? item.getExpiredDate() : "N/A"));
                 itemQuantity.setText("Quantity : " + (item.getQuantity() != null ? item.getQuantity() : "N/A"));
                 itemPickupTime.setText("Pickup Time : " + (item.getPickupTime() != null ? item.getPickupTime() : "N/A"));
@@ -402,7 +423,7 @@ public class HomeFragment extends Fragment {
                             .commit();
                 });
             } else {
-                itemCategory.setText("Item Category : " + (item.getCategory() != null ? item.getCategory() : "N/A"));
+                itemCategory.setText("Item Category : " + (item.getEssentialCategory() != null ? item.getEssentialCategory() : "N/A"));
                 itemInfo.setText("Description : " + (item.getDescription() != null ? item.getDescription() : "N/A"));
                 itemQuantity.setText("Quantity : " + (item.getQuantity() != null ? item.getQuantity() : "N/A"));
                 itemPickupTime.setText("Pickup Time : " + (item.getPickupTime() != null ? item.getPickupTime() : "N/A"));
@@ -431,7 +452,7 @@ public class HomeFragment extends Fragment {
     private void addRequestItemView(RequestEssential item) {
         View itemView = getLayoutInflater().inflate(R.layout.donation_item_view, donationGrid, false);
 
-        ImageView itemImage = itemView.findViewById(R.id.item_image);
+        ImageView itemImage = itemView.findViewById(R.id.category_icon);
         TextView itemName = itemView.findViewById(R.id.item_name);
         TextView itemCategory = itemView.findViewById(R.id.item_category);
         TextView itemInfo = itemView.findViewById(R.id.item_expiredDate);
@@ -464,8 +485,8 @@ public class HomeFragment extends Fragment {
 
         itemName.setText(item.getName());
 
-        if ("Food".equals(item.getRequestType())) {
-            itemCategory.setText("Food Category : " + (item.getEssentialCategory() != null ? item.getEssentialCategory() : "N/A"));
+        if ("Essential".equals(item.getRequestType())) {
+            itemCategory.setText("Item Category : " + (item.getEssentialCategory() != null ? item.getEssentialCategory() : "N/A"));
             itemInfo.setText("Urgency Level : " + (item.getUrgencyLevel() != null ? item.getUrgencyLevel() : "N/A"));
             itemQuantity.setText("Quantity : " + (item.getQuantity() != null ? item.getQuantity() : "N/A"));
             itemLocation.setText(item.getLocation());
@@ -717,8 +738,8 @@ public class HomeFragment extends Fragment {
             case CATEGORY:
                 items.sort((a, b) -> {
                     if (a instanceof OfferEssential && b instanceof OfferEssential) {
-                        String categoryA = ((OfferEssential) a).getFoodCategory();
-                        String categoryB = ((OfferEssential) b).getFoodCategory();
+                        String categoryA = ((OfferEssential) a).getEssentialCategory();
+                        String categoryB = ((OfferEssential) b).getEssentialCategory();
                         if (categoryA == null) categoryA = "";
                         if (categoryB == null) categoryB = "";
                         int result = categoryA.compareToIgnoreCase(categoryB);

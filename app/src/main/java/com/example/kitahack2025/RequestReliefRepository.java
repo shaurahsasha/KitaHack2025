@@ -15,7 +15,7 @@ import android.util.Log;
 
 public class RequestReliefRepository {
     private static final String TAG = "RequestReliefRepository";
-    private static final String COLLECTION_NAME = "reliefRequest";
+    private static final String COLLECTION_NAME = "allRequestItems";
     private final FirebaseFirestore db;
 
     // Define the interface for callbacks
@@ -32,67 +32,6 @@ public class RequestReliefRepository {
         void onRequestReliefLoaded(List<RequestRelief> items);
         void onError(Exception e);
     }
-
-//    public void getAllDonationItems(OnDonationItemsLoadedListener listener) {
-//        db.collection(COLLECTION_NAME)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    List<DonationItem> items = new ArrayList<>();
-//                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                        try {
-//                            String name = document.getString("name");
-//                            String foodCategory = document.getString("foodCategory");
-//                            String urgencyLevel = document.getString("urgencyLevel");
-//                            String quantity = document.getString("quantity");
-//                            String pickupTime = document.getString("pickupTime");
-//                            String location = document.getString("location");
-//                            String ownerUsername = document.getString("ownerUsername");
-//                            String status = document.getString("status");
-//                            String ownerProfileImageUrl = document.getString("ownerProfileImageUrl");
-//                            String donateType = document.getString("donateType");
-//
-//                            int imageResourceId = R.drawable.placeholder_image;
-//                            Long resourceIdLong = document.getLong("imageResourceID");
-//                            if (resourceIdLong != null) {
-//                                imageResourceId = resourceIdLong.intValue();
-//                            }
-//
-//                            String imageUrl = document.getString("imageUrl");
-//
-//                            Long createdAt = document.getLong("createdAt");
-//
-//                            if (name != null && !name.isEmpty()) {
-//                                DonationItem item = new DonationItem(
-//                                        name,
-//                                        foodCategory != null ? foodCategory : "",
-//                                        description != null ? description : "",
-//                                        category != null ? category : "",
-//                                        expiredDate != null ? expiredDate : "",
-//                                        quantity != null ? quantity : "",
-//                                        pickupTime != null ? pickupTime : "",
-//                                        location != null ? location : "",
-//                                        imageResourceId,
-//                                        imageUrl,
-//                                        ownerUsername != null ? ownerUsername : "Anonymous",
-//                                        donateType,
-//                                        ownerProfileImageUrl != null ? ownerProfileImageUrl : ""
-//                                );
-//                                // Set the document ID and status
-//                                item.setDocumentId(document.getId());
-//                                item.setStatus(status != null ? status : "active");
-//                                if (createdAt != null) {
-//                                    item.setCreatedAt(createdAt);
-//                                }
-//                                items.add(item);
-//                            }
-//                        } catch (Exception e) {
-//                            System.err.println("Error parsing document: " + e.getMessage());
-//                        }
-//                    }
-//                    listener.onDonationItemsLoaded(items);
-//                })
-//                .addOnFailureListener(listener::onError);
-//    }
 
     public void addRequestRelief(RequestRelief item, OnRequestCompleteListener listener) {
         // Get current user
@@ -128,7 +67,7 @@ public class RequestReliefRepository {
         donationData.put("ownerProfileImageUrl", ownerProfileImageUrl);
         donationData.put("status", "active");
         donationData.put("createdAt", System.currentTimeMillis());
-        donationData.put("donateType", "NonFood");
+        donationData.put("donateType", "Relief");
 
         // Add to Firestore
         db.collection(COLLECTION_NAME)

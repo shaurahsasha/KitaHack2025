@@ -179,7 +179,7 @@ public class OfferReliefFragment extends Fragment {
             String quantity = quantityInput.getText().toString().trim();
             String pickupTime = pickupTimeInput.getText().toString().trim();
             String location = locationInput.getText().toString().trim();
-            String offerType = "NonFood";
+            String offerType = "Relief";
 
             // Create new OfferItem with owner username
             OfferRelief newOffer = new OfferRelief(

@@ -2,6 +2,8 @@ package com.example.kitahack2025;
 
 import java.util.Map;
 import java.util.HashMap;
+
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,18 +41,18 @@ import android.view.Gravity;
 import android.net.Uri;
 
 public class RequestEssentialDetails extends Fragment {
-    public static final String ARG_DONATION_ITEM = "donation_item";
+    public static final String ARG_REQUEST_ITEM = "request_item";
 
     private BroadcastReceiver profileUpdateReceiver;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OfferEssential currentDonationItem;
+    private RequestEssential currentRequestItem;
     private String ownerUsername;
     private RecyclerView detailRecyclerView;
 
     public static RequestEssentialDetails newInstance(RequestEssential item) {
         RequestEssentialDetails fragment = new RequestEssentialDetails();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_DONATION_ITEM, item);
+        args.putSerializable(ARG_REQUEST_ITEM, item);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +60,7 @@ public class RequestEssentialDetails extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_offer_essential_details, container, false);
+        return inflater.inflate(R.layout.fragment_request_essential_details, container, false);
     }
 
     @Override
@@ -67,9 +69,9 @@ public class RequestEssentialDetails extends Fragment {
 
         // Get the DonationItem from arguments once
         if (getArguments() != null) {
-            currentDonationItem = (OfferEssential) getArguments().getSerializable(ARG_DONATION_ITEM);
+            currentRequestItem = (RequestEssential) getArguments().getSerializable(ARG_REQUEST_ITEM);
         }
-        if (currentDonationItem == null) {
+        if (currentRequestItem == null) {
             return;
         }
 
@@ -98,7 +100,7 @@ public class RequestEssentialDetails extends Fragment {
 
         // Convert your existing layout content into a RecyclerView item
         View contentView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.offer_essential_detail_content, null);
+                .inflate(R.layout.fragment_request_essential_details, null);
 
         // Setup views and load data
         setupViews(contentView);
@@ -109,7 +111,7 @@ public class RequestEssentialDetails extends Fragment {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.offer_essential_detail_content, parent, false);
+                        .inflate(R.layout.fragment_request_essential_details, parent, false);
                 return new RecyclerView.ViewHolder(itemView) {};
             }
 
@@ -130,16 +132,16 @@ public class RequestEssentialDetails extends Fragment {
     private void setupViews(View view) {
         // Remove the back button setup since it's now handled in onViewCreated
         // Get views and set their values
-        updateUIWithDonationItem(view, currentDonationItem);
+        updateUIWithRequestItem(view, currentRequestItem);
 
         Button editButton = view.findViewById(R.id.editButton);
         editButton.setVisibility(View.GONE); // Default to hidden
 
         // Show the edit button only if the current user is the owner
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null && currentDonationItem != null) {
+        if (currentUser != null && currentRequestItem != null) {
             String currentEmail = currentUser.getEmail();
-            if (currentEmail != null && currentEmail.equals(currentDonationItem.getEmail())) {
+            if (currentEmail != null && currentEmail.equals(currentRequestItem.getEmail())) {
                 editButton.setVisibility(View.VISIBLE);
                 editButton.setOnClickListener(v -> openEditFragment());
             } else {
@@ -151,34 +153,34 @@ public class RequestEssentialDetails extends Fragment {
     }
 
     private void refreshFoodDetails() {
-        if (currentDonationItem == null || currentDonationItem.getDocumentId() == null) {
+        if (currentRequestItem == null || currentRequestItem.getDocumentId() == null) {
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
         // Get fresh data from Firestore
         FirebaseFirestore.getInstance()
-                .collection("allDonationItems")
-                .document(currentDonationItem.getDocumentId())
+                .collection("allRequestItems")
+                .document(currentRequestItem.getDocumentId())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         try {
                             // Create new DonationItem from the fresh data
-                            OfferEssential refreshedItem = documentSnapshot.toObject(OfferEssential.class);
+                            RequestEssential refreshedItem = documentSnapshot.toObject(RequestEssential.class);
                             if (refreshedItem != null) {
                                 refreshedItem.setDocumentId(documentSnapshot.getId());
                                 String receiverEmail = documentSnapshot.getString("receiverEmail");
                                 refreshedItem.setReceiverEmail(receiverEmail);
-                                currentDonationItem = refreshedItem;
+                                currentRequestItem = refreshedItem;
 
                                 // Update UI with fresh data
                                 if (getView() != null) {
-                                    updateUIWithDonationItem(getView(), refreshedItem);
+                                    updateUIWithRequestItem(getView(), refreshedItem);
                                 }
                             }
                         } catch (Exception e) {
-                            Log.e("FoodItemDetail", "Error refreshing data", e);
+                            Log.e("ItemDetail", "Error refreshing data", e);
                             Toast.makeText(getContext(),
                                     "Error refreshing data: " + e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
@@ -187,7 +189,7 @@ public class RequestEssentialDetails extends Fragment {
                     swipeRefreshLayout.setRefreshing(false);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FoodItemDetail", "Failed to refresh", e);
+                    Log.e("ItemDetail", "Failed to refresh", e);
                     Toast.makeText(getContext(),
                             "Failed to refresh: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -195,10 +197,10 @@ public class RequestEssentialDetails extends Fragment {
                 });
     }
 
-    private void updateUIWithDonationItem(View view, OfferEssential item) {
+    private void updateUIWithRequestItem(View view, RequestEssential item) {
         ImageView itemImage = view.findViewById(R.id.detail_item_image);
         TextView itemName = view.findViewById(R.id.detail_item_name);
-        TextView itemFoodCategory = view.findViewById(R.id.detail_item_category);
+        TextView itemItemCategory = view.findViewById(R.id.detail_item_category);
         TextView itemExpiredDate = view.findViewById(R.id.detail_item_expired_date);
         TextView itemQuantity = view.findViewById(R.id.detail_item_quantity);
         TextView itemPickupTime = view.findViewById(R.id.detail_item_pickup_time);
@@ -269,13 +271,17 @@ public class RequestEssentialDetails extends Fragment {
                     .centerCrop()
                     .into(itemImage);
         } else {
-            itemImage.setImageResource(item.getImageResourceId());
+            try {
+                itemImage.setImageResource(item.getImageResourceId());
+            } catch (Resources.NotFoundException e) {
+                Log.w("HomeFragment", "Invalid imageResourceId: " + item.getImageResourceId() + ". Using placeholder.");
+                itemImage.setImageResource(R.drawable.placeholder_image); // Your fallback image
+            }
         }
 
         // Set text fields
         itemName.setText(item.getName());
-        itemFoodCategory.setText("Food Category : " + (item.getFoodCategory() != null ? item.getFoodCategory() : "N/A"));
-        itemExpiredDate.setText("Expires : " + (item.getExpiredDate() != null ? item.getExpiredDate() : "N/A"));
+        itemItemCategory.setText("Item Category : " + (item.getEssentialCategory() != null ? item.getEssentialCategory() : "N/A"));
         itemQuantity.setText("Quantity : " + (item.getQuantity() != null ? item.getQuantity() : "N/A"));
         itemPickupTime.setText("Pickup Time : " + (item.getPickupTime() != null ? item.getPickupTime() : "N/A"));
         itemLocation.setText("Location : " + (item.getLocation() != null ? item.getLocation() : "N/A"));
@@ -294,13 +300,9 @@ public class RequestEssentialDetails extends Fragment {
         itemCreatedAt.setText("Posted on " + item.getFormattedCreationDate());
 
 
+
         // Update buttons visibility based on ownership and status
         updateButtonsVisibility(view, item);
-
-        // Add click listener to location text
-        itemLocation.setOnClickListener(v -> {
-            openLocationInMaps(item.getLocation());
-        });
 
         // Make it look clickable
         itemLocation.setTextColor(getResources().getColor(R.color.button_green));
@@ -308,7 +310,7 @@ public class RequestEssentialDetails extends Fragment {
         itemLocation.setPadding(0, 0, 8, 0);
     }
 
-    private void updateButtonsVisibility(View view, OfferEssential item) {
+    private void updateButtonsVisibility(View view, RequestEssential item) {
         Button deleteButton = view.findViewById(R.id.deleteButton);
         Button requestButton = view.findViewById(R.id.requestButton);
         Button completeButton = view.findViewById(R.id.completeButton);
@@ -348,7 +350,7 @@ public class RequestEssentialDetails extends Fragment {
         }
     }
 
-    private void acceptRequestItem(OfferEssential item) {
+    private void acceptRequestItem(RequestEssential item) {
         if (item.getDocumentId() == null) {
             Toast.makeText(getContext(), "Error: Cannot update item without document ID",
                     Toast.LENGTH_SHORT).show();
@@ -369,7 +371,7 @@ public class RequestEssentialDetails extends Fragment {
         requestData.put("itemId", item.getDocumentId());
         requestData.put("timestamp", System.currentTimeMillis());
 
-        db.collection("foodRequest")
+        db.collection("allRequestItems")
                 .add(requestData)
                 .addOnSuccessListener(documentReference -> {
                     // After adding to foodRequest, update the original item's status
@@ -385,8 +387,6 @@ public class RequestEssentialDetails extends Fragment {
                                     if (getContext() != null) {
                                         Toast.makeText(getContext(), "Request accepted successfully", Toast.LENGTH_SHORT).show();
                                         refreshFoodDetails();
-
-                                        storeNotificationForOwner(item, currentUser.getEmail());
 
                                         // Broadcast the update
                                         Intent refreshIntent = new Intent("profile.stats.updated"); LocalBroadcastManager.getInstance(requireContext())
@@ -410,65 +410,6 @@ public class RequestEssentialDetails extends Fragment {
                 });
     }
 
-    private void storeNotificationForOwner(OfferEssential item, String requesterEmail) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Fetch the username from the users collection
-        db.collection("users")
-                .whereEqualTo("email", requesterEmail)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    String requesterUsername = "Unknown User";
-                    if (!querySnapshot.isEmpty()) {
-                        requesterUsername = querySnapshot.getDocuments().get(0).getString("username");
-                    }
-
-                    Map<String, Object> notificationData = new HashMap<>();
-                    notificationData.put("ownerEmail", item.getEmail());
-                    notificationData.put("itemId", item.getDocumentId());
-                    notificationData.put("itemName", item.getName());
-                    notificationData.put("requesterEmail", requesterEmail);
-                    notificationData.put("location", item.getLocation());
-                    notificationData.put("imageUrl", item.getImageUrl());
-                    notificationData.put("timestamp", System.currentTimeMillis());
-                    notificationData.put("status", "unread");
-                    notificationData.put("message", requesterUsername + " has requested your donation!");
-
-                    db.collection("notifications")
-                            .add(notificationData)
-                            .addOnSuccessListener(documentReference -> {
-                                Log.d("Notification", "Notification stored successfully");
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("NotificationError", "Failed to store notification: " + e.getMessage());
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("UserQueryError", "Failed to fetch requester username: " + e.getMessage());
-
-                    // Fallback: Store notification with requester email if username fetch fails
-                    Map<String, Object> notificationData = new HashMap<>();
-                    notificationData.put("ownerEmail", item.getEmail());
-                    notificationData.put("itemId", item.getDocumentId());
-                    notificationData.put("itemName", item.getName());
-                    notificationData.put("requesterEmail", requesterEmail);
-                    notificationData.put("location", item.getLocation());
-                    notificationData.put("imageUrl", item.getImageUrl());
-                    notificationData.put("timestamp", System.currentTimeMillis());
-                    notificationData.put("status", "unread");
-                    notificationData.put("message", requesterEmail + " has joined your event!");
-
-                    db.collection("notifications")
-                            .add(notificationData)
-                            .addOnSuccessListener(documentReference -> {
-                                Log.d("Notification", "Notification stored successfully (fallback to email)");
-                            })
-                            .addOnFailureListener(err -> {
-                                Log.e("NotificationError", "Failed to store notification (fallback): " + err.getMessage());
-                            });
-                });
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -482,7 +423,7 @@ public class RequestEssentialDetails extends Fragment {
 
                 // Get the current donation item
                 OfferEssential currentItem = getArguments() != null ?
-                        (OfferEssential) getArguments().getSerializable(ARG_DONATION_ITEM) : null;
+                        (OfferEssential) getArguments().getSerializable(ARG_REQUEST_ITEM) : null;
 
                 // Update the profile image if this detail view is for the updated user's donation
                 if (currentItem != null && currentItem.getEmail().equals(ownerEmail)) {
@@ -520,16 +461,16 @@ public class RequestEssentialDetails extends Fragment {
         }
     }
 
-    private void showDeleteConfirmation(OfferEssential item) {
+    private void showDeleteConfirmation(RequestEssential item) {
         new AlertDialog.Builder(requireContext())
-                .setTitle("Delete Donation")
-                .setMessage("Are you sure you want to delete this donation?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteDonationItem(item))
+                .setTitle("Delete Request")
+                .setMessage("Are you sure you want to delete this request?")
+                .setPositiveButton("Delete", (dialog, which) -> deleteOfferItem(item))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    private void deleteDonationItem(OfferEssential item) {
+    private void deleteOfferItem(RequestEssential item) {
         if (item.getDocumentId() == null) {
             Toast.makeText(getContext(), "Error: Cannot delete item without document ID",
                     Toast.LENGTH_SHORT).show();
@@ -538,12 +479,12 @@ public class RequestEssentialDetails extends Fragment {
 
         System.out.println("Deleting item with document ID: " + item.getDocumentId());
 
-        OfferEssentialRepository repository = new OfferEssentialRepository();
-        repository.deleteOfferItem(item.getDocumentId(), new OfferEssentialRepository.OnDeleteCompleteListener() {
+        RequestEssentialRepository repository = new RequestEssentialRepository();
+        repository.deleteRequestItem(item.getDocumentId(), new RequestEssentialRepository.OnDeleteCompleteListener() {
             @Override
             public void onDeleteSuccess() {
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), "Donation deleted successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Request deleted successfully", Toast.LENGTH_SHORT).show();
                     // Navigate back
                     requireActivity().getSupportFragmentManager().popBackStack();
                 }
@@ -552,32 +493,32 @@ public class RequestEssentialDetails extends Fragment {
             @Override
             public void onDeleteFailure(Exception e) {
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), "Failed to delete donation: " + e.getMessage(),
+                    Toast.makeText(getContext(), "Failed to delete offer: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void showCompleteConfirmation(OfferEssential item) {
+    private void showCompleteConfirmation(RequestEssential item) {
         new AlertDialog.Builder(requireContext())
-                .setTitle("Complete Donation")
-                .setMessage("Mark this donation as completed?")
+                .setTitle("Complete Offer")
+                .setMessage("Mark this offer as completed?")
                 .setPositiveButton("Complete", (dialog, which) -> completeDonation(item))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    private void completeDonation(OfferEssential item) {
+    private void completeDonation(RequestEssential item) {
         if (item.getDocumentId() == null) {
             Toast.makeText(getContext(), "Error: Cannot update item without document ID",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        OfferEssentialRepository repository = new OfferEssentialRepository();
-        repository.updateOfferStatus(item.getDocumentId(), "completed",
-                new OfferEssentialRepository.OnStatusUpdateListener() {
+        RequestEssentialRepository repository = new RequestEssentialRepository();
+        repository.updateRequestStatus(item.getDocumentId(), "completed",
+                new RequestEssentialRepository.OnStatusUpdateListener() {
                     @Override
                     public void onUpdateSuccess() {
                         if (getContext() != null) {
@@ -596,7 +537,7 @@ public class RequestEssentialDetails extends Fragment {
                             requestButton.setVisibility(View.GONE);
 
                             Toast.makeText(getContext(),
-                                    "Donation marked as complete", Toast.LENGTH_SHORT).show();
+                                    "Offer marked as complete", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -614,7 +555,7 @@ public class RequestEssentialDetails extends Fragment {
     private void loadOwnerProfileImage(String ownerUsername, ImageView ownerProfileImage) {
         // Get the DonationItem from arguments
         if (getArguments() != null) {
-            OfferEssential donationItem = (OfferEssential) getArguments().getSerializable(ARG_DONATION_ITEM);
+            RequestEssential donationItem = (RequestEssential) getArguments().getSerializable(ARG_REQUEST_ITEM);
             if (donationItem != null && donationItem.getOwnerProfileImageUrl() != null
                     && !donationItem.getOwnerProfileImageUrl().isEmpty()) {
                 // Load the profile image using the stored URL
@@ -647,37 +588,11 @@ public class RequestEssentialDetails extends Fragment {
 //                .commit();
     }
 
-
-    private void openLocationInMaps(String location) {
-        try {
-            // Create a Uri from the location string
-            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(location));
-
-            // Create an Intent from gmmIntentUri
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-
-            // Make the intent explicit by setting Google Maps package
-            mapIntent.setPackage("com.google.android.apps.maps");
-
-            // Verify that the intent will resolve to an activity
-            if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                startActivity(mapIntent);
-            } else {
-                // If Google Maps app is not installed, open in browser
-                Uri browserUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + Uri.encode(location));
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, browserUri);
-                startActivity(browserIntent);
-            }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Error opening maps: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     // Consolidated method for handling item status updates
     private void updateItemStatus(String newStatus, String message, OnStatusUpdateListener listener) {
-        if (currentDonationItem == null || currentDonationItem.getDocumentId() == null) {
+        if (currentRequestItem == null || currentRequestItem.getDocumentId() == null) {
             if (listener != null) {
-                listener.onUpdateFailure(new Exception("Invalid donation item"));
+                listener.onUpdateFailure(new Exception("Invalid offer item"));
             }
             return;
         }
@@ -686,23 +601,16 @@ public class RequestEssentialDetails extends Fragment {
         updates.put("status", newStatus);
 
         FirebaseFirestore.getInstance()
-                .collection("allDonationItems")
-                .document(currentDonationItem.getDocumentId())
+                .collection("allRequestItems")
+                .document(currentRequestItem.getDocumentId())
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
                     if (listener != null) {
                         listener.onUpdateSuccess();
                     }
                     // Update UI
-                    currentDonationItem.setStatus(newStatus);
+                    currentRequestItem.setStatus(newStatus);
                     refreshFoodDetails();
-                    // Send notification
-//                    handleNotification(
-//                        "status_update",
-//                        "Item Status Updated",
-//                        message,
-//                        currentDonationItem.getEmail()
-//                    );
                 })
                 .addOnFailureListener(e -> {
                     if (listener != null) {
@@ -718,7 +626,7 @@ public class RequestEssentialDetails extends Fragment {
     }
 
     // Consolidated method for handling button visibility
-    private void updateButtonVisibility(View view, OfferEssential item) {
+    private void updateButtonVisibility(View view, RequestEssential item) {
         if (item == null) return;
 
         Button editButton = view.findViewById(R.id.editButton);
