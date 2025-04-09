@@ -143,7 +143,7 @@ public class RequestEssentialFragment extends Fragment {
         urgencyLevelInput = view.findViewById(R.id.essential_urgency_input);
         quantityInput = view.findViewById(R.id.essential_quantity_input);
         pickupTimeInput = view.findViewById(R.id.essential_pickup_input);
-        locationInput = view.findViewById(R.id.event_seats_available_input);
+        locationInput = view.findViewById(R.id.essential_loc_input);
         submitButton = view.findViewById(R.id.submit_button);
         backButton = view.findViewById(R.id.back_button);
         foodImageView = view.findViewById(R.id.food_image);
@@ -208,19 +208,17 @@ public class RequestEssentialFragment extends Fragment {
     }
 
     private void saveRequestWithImage(String imageUrl) {
-        urgencyLevelInput.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedUrgency = parent.getItemAtPosition(position).toString();
-                Log.d("SpinnerSelection", "Selected urgency level: " + selectedUrgency);
-            }
+        // Check if user is logged in
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Please log in to submit a request", Toast.LENGTH_SHORT).show();
+            // Redirect to login screen
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle case where nothing is selected if needed
-            }
-        });
-
+        // Get request details
         String name = essentialNameInput.getText().toString();
         String foodCategory = essentialCategoryInput.getText().toString();
         String urgencyLevel = urgencyLevelInput.getSelectedItem().toString();
@@ -228,13 +226,6 @@ public class RequestEssentialFragment extends Fragment {
         String pickupTime = pickupTimeInput.getText().toString();
         String location = locationInput.getText().toString();
         String requestType = "Food";
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "You must be logged in to request", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String currentUserEmail = currentUser.getEmail();
         String ownerProfileImageUrl = currentUser.getPhotoUrl() != null ?
                 currentUser.getPhotoUrl().toString() : "";
@@ -262,9 +253,8 @@ public class RequestEssentialFragment extends Fragment {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Request added successfully", Toast.LENGTH_SHORT).show();
 
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
                     // Fetch the username from the users collection
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("users")
                             .whereEqualTo("email", currentUserEmail)
                             .get()
@@ -274,6 +264,7 @@ public class RequestEssentialFragment extends Fragment {
                                     ownersUsername = querySnapshot.getDocuments().get(0).getString("username");
                                 }
 
+                                // Create notification data
                                 Map<String, Object> notificationData = new HashMap<>();
                                 notificationData.put("ownerEmail", currentUserEmail);
                                 notificationData.put("itemName", name);
@@ -285,42 +276,24 @@ public class RequestEssentialFragment extends Fragment {
                                 notificationData.put("activityType", "request");
                                 notificationData.put("notiType", "all");
 
+                                // Save notification
                                 db.collection("notifications")
                                         .add(notificationData)
                                         .addOnSuccessListener(documentReference -> {
-                                            Log.d("Notification", "Notification stored successfully");
+                                            // Clear form or navigate back
+                                            requireActivity().getSupportFragmentManager().popBackStack();
                                         })
                                         .addOnFailureListener(e -> {
-                                            Log.e("NotificationError", "Failed to store notification: " + e.getMessage());
+                                            Toast.makeText(getContext(),
+                                                    "Failed to create notification: " + e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
                                         });
                             })
                             .addOnFailureListener(e -> {
-                                Log.e("UserQueryError", "Failed to fetch requester username: " + e.getMessage());
-
-                                // Fallback: Store notification with requester email if username fetch fails
-                                Map<String, Object> notificationData = new HashMap<>();
-                                notificationData.put("ownerEmail", currentUserEmail);
-                                notificationData.put("itemName", name);
-                                notificationData.put("location", location);
-                                notificationData.put("imageUrl", imageUrl);
-                                notificationData.put("expiredDate", pickupTime);
-                                notificationData.put("status", "unread");
-                                notificationData.put("message", currentUserEmail + " has a new request!");
-                                notificationData.put("activityType", "request");
-                                notificationData.put("notiType", "all");
-
-                                db.collection("notifications")
-                                        .add(notificationData)
-                                        .addOnSuccessListener(documentReference -> {
-                                            Log.d("Notification", "Notification stored successfully (fallback to email)");
-                                        })
-                                        .addOnFailureListener(err -> {
-                                            Log.e("NotificationError", "Failed to store notification (fallback): " + err.getMessage());
-                                        });
+                                Toast.makeText(getContext(),
+                                        "Failed to fetch username: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
                             });
-
-                    // Clear form or navigate back
-                    requireActivity().getSupportFragmentManager().popBackStack();
                 }
             }
 
@@ -336,23 +309,27 @@ public class RequestEssentialFragment extends Fragment {
     }
 
     protected boolean validateInputs() {
-        if (essentialNameInput.getText().toString().trim().isEmpty()) {
+        if (essentialNameInput == null || essentialNameInput.getText().toString().trim().isEmpty()) {
             essentialNameInput.setError("Name is required");
             return false;
         }
-        if (essentialCategoryInput.getText().toString().trim().isEmpty()) {
+        if (essentialCategoryInput == null || essentialCategoryInput.getText().toString().trim().isEmpty()) {
             essentialCategoryInput.setError("Food category is required");
             return false;
         }
-        if (quantityInput.getText().toString().trim().isEmpty()) {
+        if (urgencyLevelInput == null || urgencyLevelInput.getSelectedItem() == null) {
+            Toast.makeText(getContext(), "Urgency level is required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (quantityInput == null || quantityInput.getText().toString().trim().isEmpty()) {
             quantityInput.setError("Quantity is required");
             return false;
         }
-        if (pickupTimeInput.getText().toString().trim().isEmpty()) {
+        if (pickupTimeInput == null || pickupTimeInput.getText().toString().trim().isEmpty()) {
             pickupTimeInput.setError("Pickup time is required");
             return false;
         }
-        if (locationInput.getText().toString().trim().isEmpty()) {
+        if (locationInput == null || locationInput.getText().toString().trim().isEmpty()) {
             locationInput.setError("Location is required");
             return false;
         }

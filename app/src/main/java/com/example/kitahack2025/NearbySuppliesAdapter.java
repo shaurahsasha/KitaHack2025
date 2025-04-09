@@ -28,7 +28,7 @@ public class NearbySuppliesAdapter extends RecyclerView.Adapter<NearbySuppliesAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_nearby_supply, parent, false);
+                .inflate(R.layout.item_nearby, parent, false);
         return new ViewHolder(view);
     }
 
@@ -51,10 +51,10 @@ public class NearbySuppliesAdapter extends RecyclerView.Adapter<NearbySuppliesAd
 
         ViewHolder(View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.supply_title);
-            categoryTextView = itemView.findViewById(R.id.supply_category);
-            distanceTextView = itemView.findViewById(R.id.supply_distance);
-            categoryIcon = itemView.findViewById(R.id.category_icon);
+            titleTextView = itemView.findViewById(R.id.item_title);
+            categoryTextView = itemView.findViewById(R.id.item_category);
+            distanceTextView = itemView.findViewById(R.id.item_distance);
+            categoryIcon = itemView.findViewById(R.id.menu_icon2);
         }
 
         void bind(final OfferEssential item, final OnItemClickListener listener) {

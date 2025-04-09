@@ -100,7 +100,7 @@ public class OfferReliefFragment extends Fragment {
         reliefDescInput = view.findViewById(R.id.relief_desc_input);
         quantityInput = view.findViewById(R.id.relief_quantity_input);
         pickupTimeInput = view.findViewById(R.id.relief_pickup_input);
-        locationInput = view.findViewById(R.id.event_seats_available_input);
+        locationInput = view.findViewById(R.id.relief_loc_input);
         submitButton = view.findViewById(R.id.submit_button);
         backButton = view.findViewById(R.id.back_button);
         itemImageView = view.findViewById(R.id.food_image);
@@ -217,27 +217,27 @@ public class OfferReliefFragment extends Fragment {
     }
 
     protected boolean validateInputs() {
-        if (reliefNameInput.getText().toString().trim().isEmpty()) {
+        if (reliefNameInput == null || reliefNameInput.getText().toString().trim().isEmpty()) {
             reliefNameInput.setError("Name is required");
             return false;
         }
-        if (reliefCategoryInput.getText().toString().trim().isEmpty()) {
+        if (reliefCategoryInput == null || reliefCategoryInput.getText().toString().trim().isEmpty()) {
             reliefCategoryInput.setError("Item category is required");
             return false;
         }
-        if (reliefDescInput.getText().toString().trim().isEmpty()) {
+        if (reliefDescInput == null || reliefDescInput.getText().toString().trim().isEmpty()) {
             reliefDescInput.setError("Description is required");
             return false;
         }
-        if (quantityInput.getText().toString().trim().isEmpty()) {
+        if (quantityInput == null || quantityInput.getText().toString().trim().isEmpty()) {
             quantityInput.setError("Quantity is required");
             return false;
         }
-        if (pickupTimeInput.getText().toString().trim().isEmpty()) {
+        if (pickupTimeInput == null || pickupTimeInput.getText().toString().trim().isEmpty()) {
             pickupTimeInput.setError("Pickup time is required");
             return false;
         }
-        if (locationInput.getText().toString().trim().isEmpty()) {
+        if (locationInput == null || locationInput.getText().toString().trim().isEmpty()) {
             locationInput.setError("Location is required");
             return false;
         }

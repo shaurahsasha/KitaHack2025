@@ -143,9 +143,9 @@ public class OfferEssentialFragment extends Fragment {
         essentialNameInput = view.findViewById(R.id.essential_name_input);
         essentialCategoryInput = view.findViewById(R.id.essential_category_input);
         expiryDateInput = view.findViewById(R.id.essential_expiry_input);
-        quantityInput = view.findViewById(R.id.essential_category_input);
+        quantityInput = view.findViewById(R.id.essential_quantity_input);
         pickupTimeInput = view.findViewById(R.id.essential_pickup_input);
-        locationInput = view.findViewById(R.id.event_seats_available_input);
+        locationInput = view.findViewById(R.id.essential_loc_input);
         submitButton = view.findViewById(R.id.submit_button);
         backButton = view.findViewById(R.id.back_button);
         foodImageView = view.findViewById(R.id.food_image);
@@ -210,6 +210,17 @@ public class OfferEssentialFragment extends Fragment {
     }
 
     private void saveOfferWithImage(String imageUrl) {
+        // Check if user is logged in
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Please log in to submit an offer", Toast.LENGTH_SHORT).show();
+            // Redirect to login screen
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        // Get offer details
         String name = essentialNameInput.getText().toString();
         String essentialCategory = essentialCategoryInput.getText().toString();
         String description = "";
@@ -219,14 +230,7 @@ public class OfferEssentialFragment extends Fragment {
         String pickupTime = pickupTimeInput.getText().toString();
         String location = locationInput.getText().toString();
         String offerType = "Food";
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String ownerEmail = currentUser.getEmail();
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "You must be logged in to offer", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String ownerUsername = currentUser.getDisplayName();
         String ownerProfileImageUrl = currentUser.getPhotoUrl() != null ?
                 currentUser.getPhotoUrl().toString() : "";
@@ -303,51 +307,31 @@ public class OfferEssentialFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("UserQueryError", "Failed to fetch requester username: " + e.getMessage());
-
-                    // Fallback: Store notification with requester email if username fetch fails
-                    Map<String, Object> notificationData = new HashMap<>();
-                    notificationData.put("ownerEmail", ownerEmail);
-                    notificationData.put("essentialName", name);
-                    notificationData.put("location", location);
-                    notificationData.put("imageUrl", imageUrl);
-                    notificationData.put("expiredDate", expiredDate);
-                    notificationData.put("status", "unread");
-                    notificationData.put("message", ownerEmail + " has a new offer!");
-                    notificationData.put("notiType", "all");
-
-                    db.collection("notifications")
-                            .add(notificationData)
-                            .addOnSuccessListener(documentReference -> {
-                                Log.d("Notification", "Notification stored successfully (fallback to email)");
-                            })
-                            .addOnFailureListener(err -> {
-                                Log.e("NotificationError", "Failed to store notification (fallback): " + err.getMessage());
-                            });
                 });
     }
 
     protected boolean validateInputs() {
-        if (essentialNameInput.getText().toString().trim().isEmpty()) {
+        if (essentialNameInput == null || essentialNameInput.getText().toString().trim().isEmpty()) {
             essentialNameInput.setError("Essential name is required");
             return false;
         }
-        if (essentialCategoryInput.getText().toString().trim().isEmpty()) {
+        if (essentialCategoryInput == null || essentialCategoryInput.getText().toString().trim().isEmpty()) {
             essentialCategoryInput.setError("Essential category is required");
             return false;
         }
-        if (expiryDateInput.getText().toString().trim().isEmpty()) {
+        if (expiryDateInput == null || expiryDateInput.getText().toString().trim().isEmpty()) {
             expiryDateInput.setError("Expiry date is required");
             return false;
         }
-        if (quantityInput.getText().toString().trim().isEmpty()) {
+        if (quantityInput == null || quantityInput.getText().toString().trim().isEmpty()) {
             quantityInput.setError("Quantity is required");
             return false;
         }
-        if (pickupTimeInput.getText().toString().trim().isEmpty()) {
+        if (pickupTimeInput == null || pickupTimeInput.getText().toString().trim().isEmpty()) {
             pickupTimeInput.setError("Pickup time is required");
             return false;
         }
-        if (locationInput.getText().toString().trim().isEmpty()) {
+        if (locationInput == null || locationInput.getText().toString().trim().isEmpty()) {
             locationInput.setError("Location is required");
             return false;
         }
