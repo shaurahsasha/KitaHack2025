@@ -113,13 +113,6 @@
                 android:contentDescription="sign up with google"
                 android:background="@drawable/ic_google" />
 
-            <ImageButton
-                android:id="@+id/facebookButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:contentDescription="sign up with facebook"
-                android:background="@drawable/ic_facebook" />
 
         </LinearLayout>
 
