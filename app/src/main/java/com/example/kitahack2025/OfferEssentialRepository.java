@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class OfferEssentialRepository {
     private static final String TAG = "OfferEssentialRepository";
-    private static final String COLLECTION_NAME = "allOfferEssentials";
+    private static final String COLLECTION_NAME = "allOfferItems";
     private final FirebaseFirestore db;
 
     // Define the interface for callbacks
@@ -40,10 +40,10 @@ public class OfferEssentialRepository {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         try {
                             String name = document.getString("name");
-                            String foodCategory = document.getString("essentialCategory");
+                            String essentialCategory = document.getString("essentialCategory");
                             String description = document.getString("description");
                             String category = document.getString("category");
-                            String expiryDate = document.getString("expiryDate");
+                            String expiryDate = document.getString("expiredDate");
                             String quantity = document.getString("quantity");
                             String pickupTime = document.getString("pickupTime");
                             String location = document.getString("location");
@@ -67,7 +67,7 @@ public class OfferEssentialRepository {
                             if (name != null && !name.isEmpty()) {
                                 OfferEssential item = new OfferEssential(
                                         name,
-                                        foodCategory != null ? foodCategory : "",
+                                        essentialCategory != null ? essentialCategory : "",
                                         description != null ? description : "",
                                         category != null ? category : "",
                                         expiryDate != null ? expiryDate : "",
@@ -122,18 +122,18 @@ public class OfferEssentialRepository {
         // Create offer data map
         Map<String, Object> offerData = new HashMap<>();
         offerData.put("name", item.getName());
-        offerData.put("essentialCategory", item.getFoodCategory());
-        offerData.put("expiryDate", item.getExpiredDate());
+        offerData.put("essentialCategory", item.getEssentialCategory());
+        offerData.put("expiredDate", item.getExpiredDate());
         offerData.put("quantity", item.getQuantity());
         offerData.put("pickupTime", item.getPickupTime());
         offerData.put("location", item.getLocation());
-        offerData.put("imageResourceId", item.getImageResourceId());
+        offerData.put("imageResourceID", item.getImageResourceId());
         offerData.put("imageUrl", item.getImageUrl());
         offerData.put("email", userEmail);
         offerData.put("ownerProfileImageUrl", ownerProfileImageUrl);
         offerData.put("status", "active");
         offerData.put("createdAt", System.currentTimeMillis());
-        offerData.put("offerType", "Food");
+        offerData.put("offerType", "Essential");
 
         // Add to Firestore
         db.collection(COLLECTION_NAME)

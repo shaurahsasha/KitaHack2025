@@ -121,4 +121,8 @@ public class RequestEssential implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setReceiverEmail(String email) {
+        this.email = email;
+    }
 }

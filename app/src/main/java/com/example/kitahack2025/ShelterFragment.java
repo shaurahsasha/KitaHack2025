@@ -291,10 +291,10 @@ public class ShelterFragment extends Fragment {
 
         View shelterItem = getLayoutInflater().inflate(R.layout.item_shelter_detail, shelterGrid, false);
 
-        ImageView shelterImg = shelterItem.findViewById(R.id.item_image);
+        ImageView shelterImg = shelterItem.findViewById(R.id.category_icon);
         TextView shelterName = shelterItem.findViewById(R.id.item_name);
         TextView shelterDate = shelterItem.findViewById(R.id.item_date);
-        TextView shelterLocation = shelterItem.findViewById(R.id.item_location);
+        TextView shelterLocation = shelterItem.findViewById(R.id.supply_distance);
         TextView shelterDesc = shelterItem.findViewById(R.id.item_desc);
         Button joinButton = shelterItem.findViewById(R.id.BtnJoin);
 

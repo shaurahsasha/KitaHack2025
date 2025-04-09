@@ -63,15 +63,6 @@ public class ActionsFragment extends Fragment {
         requestReliefButton = view.findViewById(R.id.request_essential_button);
         coordSheltersButton = view.findViewById(R.id.coord_shelters_button);
         nearbySuppliesButton = view.findViewById(R.id.nearby_supplies_button);
-//        notificationIV = view.findViewById(R.id.menu_icon2);
-
-//        notificationIV.setOnClickListener(v -> {
-//            requireActivity().getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, new NotificationAll())
-//                    .addToBackStack(null)
-//                    .commit();
-//        });
 
         // Set click listener
         offerEssentialButton.setOnClickListener(v -> {

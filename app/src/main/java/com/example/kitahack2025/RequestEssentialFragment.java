@@ -65,9 +65,7 @@ public class RequestEssentialFragment extends Fragment {
     private FirebaseStorage storage;
     protected StorageReference storageRef;
     protected ProgressBar progressBar;
-    private ActivityResultLauncher<Intent> cameraLauncher;
     private Uri photoUri;
-    private static final int CAMERA_PERMISSION_REQUEST = 100;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,23 +90,6 @@ public class RequestEssentialFragment extends Fragment {
                                 .load(selectedImageUri)
                                 .centerCrop()
                                 .into(foodImageView);
-                    }
-                }
-        );
-
-        // Initialize camera launcher
-        cameraLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        if (photoUri != null) {
-                            selectedImageUri = photoUri;
-                            // Show selected image
-                            Glide.with(this)
-                                    .load(photoUri)
-                                    .centerCrop()
-                                    .into(foodImageView);
-                        }
                     }
                 }
         );
@@ -143,13 +124,10 @@ public class RequestEssentialFragment extends Fragment {
         urgencyLevelInput = view.findViewById(R.id.essential_urgency_input);
         quantityInput = view.findViewById(R.id.essential_quantity_input);
         pickupTimeInput = view.findViewById(R.id.essential_pickup_input);
-        locationInput = view.findViewById(R.id.essential_loc_input);
+        locationInput = view.findViewById(R.id.event_seats_available_input);
         submitButton = view.findViewById(R.id.submit_button);
         backButton = view.findViewById(R.id.back_button);
         foodImageView = view.findViewById(R.id.food_image);
-        Button uploadImageButton = view.findViewById(R.id.upload_image_button);
-
-        uploadImageButton.setOnClickListener(v -> showImageSourceDialog());
     }
 
     protected void submitRequest() {
@@ -208,17 +186,19 @@ public class RequestEssentialFragment extends Fragment {
     }
 
     private void saveRequestWithImage(String imageUrl) {
-        // Check if user is logged in
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "Please log in to submit a request", Toast.LENGTH_SHORT).show();
-            // Redirect to login screen
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-            return;
-        }
+        urgencyLevelInput.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedUrgency = parent.getItemAtPosition(position).toString();
+                Log.d("SpinnerSelection", "Selected urgency level: " + selectedUrgency);
+            }
 
-        // Get request details
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle case where nothing is selected if needed
+            }
+        });
+
         String name = essentialNameInput.getText().toString();
         String foodCategory = essentialCategoryInput.getText().toString();
         String urgencyLevel = urgencyLevelInput.getSelectedItem().toString();
@@ -226,6 +206,13 @@ public class RequestEssentialFragment extends Fragment {
         String pickupTime = pickupTimeInput.getText().toString();
         String location = locationInput.getText().toString();
         String requestType = "Food";
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "You must be logged in to request", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String currentUserEmail = currentUser.getEmail();
         String ownerProfileImageUrl = currentUser.getPhotoUrl() != null ?
                 currentUser.getPhotoUrl().toString() : "";
@@ -253,8 +240,9 @@ public class RequestEssentialFragment extends Fragment {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Request added successfully", Toast.LENGTH_SHORT).show();
 
-                    // Fetch the username from the users collection
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    // Fetch the username from the users collection
                     db.collection("users")
                             .whereEqualTo("email", currentUserEmail)
                             .get()
@@ -264,7 +252,6 @@ public class RequestEssentialFragment extends Fragment {
                                     ownersUsername = querySnapshot.getDocuments().get(0).getString("username");
                                 }
 
-                                // Create notification data
                                 Map<String, Object> notificationData = new HashMap<>();
                                 notificationData.put("ownerEmail", currentUserEmail);
                                 notificationData.put("itemName", name);
@@ -276,24 +263,42 @@ public class RequestEssentialFragment extends Fragment {
                                 notificationData.put("activityType", "request");
                                 notificationData.put("notiType", "all");
 
-                                // Save notification
                                 db.collection("notifications")
                                         .add(notificationData)
                                         .addOnSuccessListener(documentReference -> {
-                                            // Clear form or navigate back
-                                            requireActivity().getSupportFragmentManager().popBackStack();
+                                            Log.d("Notification", "Notification stored successfully");
                                         })
                                         .addOnFailureListener(e -> {
-                                            Toast.makeText(getContext(),
-                                                    "Failed to create notification: " + e.getMessage(),
-                                                    Toast.LENGTH_SHORT).show();
+                                            Log.e("NotificationError", "Failed to store notification: " + e.getMessage());
                                         });
                             })
                             .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(),
-                                        "Failed to fetch username: " + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
+                                Log.e("UserQueryError", "Failed to fetch requester username: " + e.getMessage());
+
+                                // Fallback: Store notification with requester email if username fetch fails
+                                Map<String, Object> notificationData = new HashMap<>();
+                                notificationData.put("ownerEmail", currentUserEmail);
+                                notificationData.put("itemName", name);
+                                notificationData.put("location", location);
+                                notificationData.put("imageUrl", imageUrl);
+                                notificationData.put("expiredDate", pickupTime);
+                                notificationData.put("status", "unread");
+                                notificationData.put("message", currentUserEmail + " has a new request!");
+                                notificationData.put("activityType", "request");
+                                notificationData.put("notiType", "all");
+
+                                db.collection("notifications")
+                                        .add(notificationData)
+                                        .addOnSuccessListener(documentReference -> {
+                                            Log.d("Notification", "Notification stored successfully (fallback to email)");
+                                        })
+                                        .addOnFailureListener(err -> {
+                                            Log.e("NotificationError", "Failed to store notification (fallback): " + err.getMessage());
+                                        });
                             });
+
+                    // Clear form or navigate back
+                    requireActivity().getSupportFragmentManager().popBackStack();
                 }
             }
 
@@ -309,27 +314,23 @@ public class RequestEssentialFragment extends Fragment {
     }
 
     protected boolean validateInputs() {
-        if (essentialNameInput == null || essentialNameInput.getText().toString().trim().isEmpty()) {
+        if (essentialNameInput.getText().toString().trim().isEmpty()) {
             essentialNameInput.setError("Name is required");
             return false;
         }
-        if (essentialCategoryInput == null || essentialCategoryInput.getText().toString().trim().isEmpty()) {
+        if (essentialCategoryInput.getText().toString().trim().isEmpty()) {
             essentialCategoryInput.setError("Food category is required");
             return false;
         }
-        if (urgencyLevelInput == null || urgencyLevelInput.getSelectedItem() == null) {
-            Toast.makeText(getContext(), "Urgency level is required", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (quantityInput == null || quantityInput.getText().toString().trim().isEmpty()) {
+        if (quantityInput.getText().toString().trim().isEmpty()) {
             quantityInput.setError("Quantity is required");
             return false;
         }
-        if (pickupTimeInput == null || pickupTimeInput.getText().toString().trim().isEmpty()) {
+        if (pickupTimeInput.getText().toString().trim().isEmpty()) {
             pickupTimeInput.setError("Pickup time is required");
             return false;
         }
-        if (locationInput == null || locationInput.getText().toString().trim().isEmpty()) {
+        if (locationInput.getText().toString().trim().isEmpty()) {
             locationInput.setError("Location is required");
             return false;
         }
@@ -362,59 +363,6 @@ public class RequestEssentialFragment extends Fragment {
         imagePickerLauncher.launch(intent);
     }
 
-    private void showImageSourceDialog() {
-        String[] options = {"Take Photo", "Choose from Gallery"};
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Select Image Source")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        // Take photo with camera
-                        if (checkCameraPermission()) {
-                            openCamera();
-                        } else {
-                            requestCameraPermission();
-                        }
-                    } else {
-                        // Choose from gallery
-                        openImagePicker();
-                    }
-                })
-                .show();
-    }
-
-    private boolean checkCameraPermission() {
-        return ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(requireActivity(),
-                new String[]{Manifest.permission.CAMERA},
-                CAMERA_PERMISSION_REQUEST);
-    }
-
-    private void openCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                Toast.makeText(getContext(),
-                        "Error creating image file", Toast.LENGTH_SHORT).show();
-            }
-
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(requireContext(),
-                        "com.shareplateapp.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                cameraLauncher.launch(takePictureIntent);
-            }
-        }
-    }
-
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -424,19 +372,5 @@ public class RequestEssentialFragment extends Fragment {
                 ".jpg",        /* suffix */
                 storageDir     /* directory */
         );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Toast.makeText(getContext(),
-                        "Camera permission is required to take photos",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
