@@ -114,16 +114,13 @@
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_time">
 
-                <EditText
-                    android:id="@+id/event_time_input"
+                <Spinner
+                    android:id="@+id/operational_hours_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Operational Hours"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"/>
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    android:background="@drawable/spinner_background"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
